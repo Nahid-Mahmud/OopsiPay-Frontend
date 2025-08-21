@@ -6,10 +6,18 @@ import ReviewSection from "@/components/modules/About/ReviewSection";
 export default function About() {
   return (
     <div>
-      <AboutHeroSection />
-      <FeaturesSection />
-      <GetStartedSection />
-      <ReviewSection />
+      <div className="bg-background pb-20">
+        <AboutHeroSection />
+      </div>
+      <div className="bg-secondary pb-20">
+        <FeaturesSection />
+      </div>
+      <div className=" bg-background">
+        <GetStartedSection />
+      </div>
+      <div className="pb-20 bg-secondary">
+        <ReviewSection />
+      </div>
     </div>
   );
 }

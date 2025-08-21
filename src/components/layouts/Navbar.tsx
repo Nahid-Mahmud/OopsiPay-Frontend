@@ -3,10 +3,8 @@ import { Button } from "../ui/button";
 import { Link } from "react-router";
 
 const navItems = [
-  { name: "Features", href: "#" },
-  { name: "Business", href: "#" },
-  { name: "Support", href: "#" },
   { name: "About", href: "/about" },
+  { name: "Features", href: "/features" },
 ];
 
 export default function Navbar() {
