@@ -1,8 +1,17 @@
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
+import { Link } from "react-router";
+
+const navItems = [
+  { name: "Features", href: "#" },
+  { name: "Business", href: "#" },
+  { name: "Support", href: "#" },
+  { name: "About", href: "/about" },
+];
 
 export default function Navbar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [scroll, setScroll] = useState(false);
 
   //   disable scroll when sidebar is open
 
@@ -14,27 +23,42 @@ export default function Navbar() {
     }
   }, [sidebarOpen]);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setScroll(window.scrollY > 20);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
     <div>
-      <header className="absolute inset-x-0 top-0 z-10 p-6">
+      <header
+        className={`fixed inset-x-0 top-0 z-50 p-6 transition-all duration-300 ${
+          scroll ? "bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100" : "bg-transparent"
+        }`}
+      >
         <nav className="flex items-center justify-between max-w-7xl mx-auto">
-          <div className="font-space-grotesk font-bold text-2xl text-black">OopsiPAY</div>
+          <div className="font-space-grotesk font-bold text-2xl text-black">
+            <Link to="/">OopsiPAY</Link>
+          </div>
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center space-x-8">
-            <a href="#" className="text-black/80 hover:text-black transition-colors font-dm-sans">
-              Features
-            </a>
-            <a href="#" className="text-black/80 hover:text-black transition-colors font-dm-sans">
-              Business
-            </a>
-            <a href="#" className="text-black/80 hover:text-black transition-colors font-dm-sans">
-              Support
-            </a>
-            <a href="#" className="text-black/80 hover:text-black transition-colors font-dm-sans">
-              About
-            </a>
+          <div className="hidden md:flex items-center gap-8">
+            {navItems.map((item) => (
+              <Link
+                key={item.name}
+                to={item.href}
+                className="text-black/80 hover:text-black transition-colors text-lg hover:font-bold"
+              >
+                {item.name}
+              </Link>
+            ))}
           </div>
           {/* Mobile Hamburger */}
+
           <button
             className="md:hidden flex items-center justify-center w-10 h-10 rounded focus:outline-none"
             onClick={() => setSidebarOpen(true)}
@@ -65,13 +89,13 @@ export default function Navbar() {
       {
         <>
           <div
-            className={`fixed inset-0 bg-black/40 z-30 transition-opacity duration-300 ease-in-out ${
+            className={`fixed inset-0 bg-black/40 z-40 transition-opacity duration-300 ease-in-out ${
               sidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
             }`}
             onClick={() => setSidebarOpen(false)}
           />
           <aside
-            className={`fixed top-0 left-0 h-full w-64 bg-white z-40 shadow-lg flex flex-col p-8 transform transition-transform duration-300 ease-in-out ${
+            className={`fixed top-0 left-0 h-full w-64 bg-white z-50 shadow-lg flex flex-col p-8 transform transition-transform duration-300 ease-in-out ${
               sidebarOpen ? "translate-x-0" : "-translate-x-full"
             }`}
           >
@@ -98,34 +122,16 @@ export default function Navbar() {
               </button>
             </div>
             <nav className="flex flex-col space-y-6">
-              <a
-                href="#"
-                className="text-black/80 hover:text-black transition-colors font-dm-sans text-lg"
-                onClick={() => setSidebarOpen(false)}
-              >
-                Features
-              </a>
-              <a
-                href="#"
-                className="text-black/80 hover:text-black transition-colors font-dm-sans text-lg"
-                onClick={() => setSidebarOpen(false)}
-              >
-                Business
-              </a>
-              <a
-                href="#"
-                className="text-black/80 hover:text-black transition-colors font-dm-sans text-lg"
-                onClick={() => setSidebarOpen(false)}
-              >
-                Support
-              </a>
-              <a
-                href="#"
-                className="text-black/80 hover:text-black transition-colors font-dm-sans text-lg"
-                onClick={() => setSidebarOpen(false)}
-              >
-                About
-              </a>
+              {navItems.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className="text-black/80 hover:text-black transition-colors font-dm-sans text-lg"
+                  onClick={() => setSidebarOpen(false)}
+                >
+                  {item.name}
+                </Link>
+              ))}
               <Button variant="secondary" className="font-dm-sans font-medium mt-8">
                 Get Started
               </Button>
