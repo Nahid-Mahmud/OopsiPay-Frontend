@@ -16,7 +16,7 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <div className="min-h-screen overflow-hidden relative">
+    <div className="min-h-screen overflow-hidden relative py-5 md:py-0">
       {/* Animated gradient background */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary via-violet-100 to-primary animate-gradient" />
 
