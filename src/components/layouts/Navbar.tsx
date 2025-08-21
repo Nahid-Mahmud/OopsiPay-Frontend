@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Link } from "react-router";
 
-const navItems = [
+const navItems: { name: string; href: string }[] = [
   { name: "About", href: "/about" },
   { name: "Features", href: "/features" },
+  { name: "Contact", href: "/contact" },
 ];
 
 export default function Navbar() {
