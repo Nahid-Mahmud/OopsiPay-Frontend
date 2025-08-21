@@ -15,7 +15,7 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <div className="min-h-screen overflow-hidden relative py-20 md:py-20">
+    <div className="min-h-screen overflow-hidden relative">
       {/* Animated gradient background */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary via-violet-100 to-primary animate-gradient" />
 
@@ -56,7 +56,7 @@ export default function HeroSection() {
       </div>
 
       {/* Main content */}
-      <main className="relative z-10 flex items-center justify-center min-h-[calc(100vh-120px)] px-6">
+      <main className="relative z-10 flex items-center justify-center min-h-screen px-6 py-20">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
           {/* Left content */}
           <div className="text-center lg:text-left space-y-8">
