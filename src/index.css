@@ -1,7 +1,13 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap");
+
 @import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+
+* {
+  font-family: "Roboto Mono", monospace;
+}
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);

@@ -53,12 +53,19 @@ export default function ReviewSection() {
       <div className=" mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-foreground mb-4">Loved by millions worldwide</h2>
-          <p className="text-xl text-muted-foreground">See what our users say about their OopsiPay experience</p>
+          <p className="text-xl text-muted-foreground">See what our users say about their SwiftPay experience</p>
         </div>
 
-        <Marquee gradient={true} gradientWidth={300} speed={50} pauseOnHover={true} className="">
+        <Marquee
+          gradient={true}
+          // gradientColor="hsl(var(--background))"
+          gradientWidth={100}
+          speed={50}
+          pauseOnHover={true}
+          className=""
+        >
           {reviews.map((review, index) => (
-            <Card key={index} className="border border-border mx-4 w-80 h-64 flex-shrink-0 flex flex-col">
+            <Card key={index} className="border border-border mx-4 w-80 h-80 flex-shrink-0 flex flex-col">
               <CardContent className="pt-6 flex-1 flex flex-col">
                 <div className="flex items-center mb-4">
                   {[...Array(5)].map((_, i) => (
