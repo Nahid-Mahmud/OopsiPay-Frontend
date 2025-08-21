@@ -113,11 +113,11 @@ export default function HeroSection() {
           </div>
 
           {/* Right content - Phone mockup */}
-          <div className="relative flex justify-center lg:justify-end">
-            <div className="relative animate-float">
+          <div className="relative flex justify-center lg:justify-end ">
+            <div className="relative animate-float ">
               {/* Phone mockup */}
               <div className="relative w-80 h-[600px] bg-gradient-to-b from-white/20 to-white/10 rounded-[3rem] p-4 backdrop-blur-sm border border-white/20">
-                <div className="w-full h-full bg-secondary rounded-[2.5rem] relative overflow-hidden">
+                <div className="w-full h-full bg-green-50 rounded-[2.5rem] relative overflow-hidden ">
                   {/* Phone screen content */}
                   <div className="absolute top-4 left-4 right-4">
                     <div className="flex justify-between items-center text-black">
@@ -131,7 +131,7 @@ export default function HeroSection() {
                   </div>
 
                   {/* App content */}
-                  <div className="absolute top-20 left-4 right-4 bottom-4">
+                  <div className="absolute top-20 left-4 right-4 bottom-4 ">
                     <div className="text-center space-y-6">
                       {/* Rocket illustration placeholder */}
                       <div className="w-32 h-32 mx-auto bg-primary/20 rounded-full flex items-center justify-center animate-float-reverse">
