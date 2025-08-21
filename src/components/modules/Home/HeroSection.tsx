@@ -1,5 +1,4 @@
 import HoverButton from "@/components/HoverButton";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 
@@ -16,7 +15,7 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <div className="min-h-screen overflow-hidden relative py-5 md:py-0">
+    <div className="min-h-screen overflow-hidden relative py-20 md:py-20">
       {/* Animated gradient background */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary via-violet-100 to-primary animate-gradient" />
 
@@ -56,37 +55,13 @@ export default function HeroSection() {
         />
       </div>
 
-      {/* Header */}
-      <header className="relative z-10 p-6">
-        <nav className="flex items-center justify-between max-w-7xl mx-auto">
-          <div className="font-space-grotesk font-bold text-2xl text-black">OopsiPAY</div>
-          <div className="hidden md:flex items-center space-x-8">
-            <a href="#" className="text-black/80 hover:text-black transition-colors font-dm-sans">
-              Features
-            </a>
-            <a href="#" className="text-black/80 hover:text-black transition-colors font-dm-sans">
-              Business
-            </a>
-            <a href="#" className="text-black/80 hover:text-black transition-colors font-dm-sans">
-              Support
-            </a>
-            <a href="#" className="text-black/80 hover:text-black transition-colors font-dm-sans">
-              About
-            </a>
-          </div>
-          <Button variant="secondary" className="font-dm-sans font-medium">
-            Get Started
-          </Button>
-        </nav>
-      </header>
-
       {/* Main content */}
       <main className="relative z-10 flex items-center justify-center min-h-[calc(100vh-120px)] px-6">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
           {/* Left content */}
           <div className="text-center lg:text-left space-y-8">
             <div className="space-y-4">
-              <h1 className="font-space-grotesk font-bold text-5xl lg:text-7xl text-black leading-tight">
+              <h1 className="font-space-grotesk font-bold md:text-5xl text-3xl lg:text-7xl text-black leading-tight">
                 SEND MONEY
                 <br />
                 <span className="text-primary">IN REAL TIME.</span>
