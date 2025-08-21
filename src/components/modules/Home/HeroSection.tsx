@@ -67,7 +67,7 @@ export default function HeroSection() {
                 <span className="text-primary">IN REAL TIME.</span>
               </h1>
               <p className="font-dm-sans text-xl text-black/80 max-w-lg">
-                Money transfers between friends in 10 seconds or less. It's simple, optimized and Made in Europe.
+                Money transfers between friends in 10 seconds or less. It's simple, optimized and Made in Bangladesh.
               </p>
             </div>
 
@@ -117,7 +117,7 @@ export default function HeroSection() {
                         </p>
                       </div>
 
-                      <div className="font-space-grotesk font-bold text-4xl text-black">OopsiPay</div>
+                      <div className="font-space-grotesk font-bold text-4xl text-black">OopsiPAY</div>
                     </div>
                   </div>
                 </div>
