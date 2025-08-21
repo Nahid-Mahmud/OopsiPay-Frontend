@@ -2,6 +2,8 @@ import CashOutIcon from "@/assets/icons/cash-out.png";
 import InstantTransfer from "@/assets/icons/instant.png";
 import ReceiveMoney from "@/assets/icons/receive_money.png";
 import SendMoney from "@/assets/icons/send-money.png";
+import AddMoney from "@/assets/icons/deposit.png";
+import Secure from "@/assets/icons/insurance.png";
 
 const Features = [
   {
@@ -24,18 +26,33 @@ const Features = [
     title: "Instant Transfer",
     description: "Transfer money instantly to anyone, anywhere.",
   },
+  {
+    icon: AddMoney,
+    title: "Add Money",
+    description: "Add money to your wallet from your bank account or credit card.",
+  },
+  {
+    icon: Secure,
+    title: "Secure",
+    description: "Your transactions are protected with bank-level security.",
+  },
 ];
 
 export default function FeaturesSection() {
   return (
     <div>
-      <section className="py-40 container mx-auto">
-        <h2 className="md:text-5xl text-xl font-bold text-center mb-20">Your Complete Payment Solution</h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-4">
+      <section className="py-10 container mx-auto max-w-6xl space-y-12">
+        <div className="space-y-4">
+          <h2 className="md:text-4xl text-xl font-bold text-center">Your Complete Payment Solution</h2>
+          <p className="text-lg text-muted-foreground text-center max-w-lg mx-auto">
+            From daily transactions to international transfers, SwiftPay makes managing your money effortless.
+          </p>
+        </div>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
           {Features.map((feature, index) => (
             <div
               key={index}
-              className="group hover:shadow-xl  rounded-md transition-all cursor-pointer  duration-300  shadow-none hover:border hover:border-green-400"
+              className="group hover:shadow-xl border   rounded-md transition-all cursor-pointer  duration-300  shadow-none hover:border hover:border-green-400"
             >
               <div className="flex flex-col items-center text-center p-6 space-y-4">
                 <img
