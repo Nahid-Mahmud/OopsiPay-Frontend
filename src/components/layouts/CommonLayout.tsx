@@ -12,7 +12,7 @@ export default function CommonLayout() {
       <div className={pathname === "/" ? "pt-0" : "pt-20"}>
         <Outlet />
       </div>
-      <Footer />
+      {pathname !== "/" && <Footer />}
     </div>
   );
 }
