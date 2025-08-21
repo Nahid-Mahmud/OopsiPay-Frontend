@@ -1,5 +1,6 @@
 import CommonLayout from "@/components/layouts/CommonLayout";
 import About from "@/pages/About";
+import ContactPage from "@/pages/ContactUs";
 import Features from "@/pages/Features";
 import HomePage from "@/pages/Home";
 import { createBrowserRouter } from "react-router";
@@ -20,6 +21,10 @@ export const router = createBrowserRouter([
       {
         path: "/features",
         Component: Features,
+      },
+      {
+        path: "/contact",
+        Component: ContactPage,
       },
     ],
   },

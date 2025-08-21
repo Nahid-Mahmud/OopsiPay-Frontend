@@ -2,7 +2,7 @@ import { Link } from "react-router";
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-50 border-t border-gray-200">
+    <footer className="bg-secondary border-t border-gray-200">
       <div className="container mx-auto px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand Section */}
@@ -38,9 +38,6 @@ export default function Footer() {
               </Link>
               <Link to="#" className="text-gray-600 hover:text-gray-900 transition-colors duration-200">
                 Contact Us
-              </Link>
-              <Link to="#" className="text-gray-600 hover:text-gray-900 transition-colors duration-200">
-                API Documentation
               </Link>
             </div>
           </div>
