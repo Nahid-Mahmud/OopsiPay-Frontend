@@ -9,7 +9,7 @@ export default function ReviewSection() {
       role: "Small Business Owner",
       initials: "SA",
       review:
-        "SwiftPay has made sending money to my family abroad so much easier. The fees are transparent and the transfers are instant!",
+        "OopsiPAY has made sending money to my family abroad so much easier. The fees are transparent and the transfers are instant!",
     },
     {
       name: "Michael Johnson",
@@ -37,7 +37,7 @@ export default function ReviewSection() {
       role: "Entrepreneur",
       initials: "EW",
       review:
-        "SwiftPay's analytics dashboard gives me incredible insights into my business cash flow. It's like having a financial advisor in my pocket.",
+        "OopsiPAY's analytics dashboard gives me incredible insights into my business cash flow. It's like having a financial advisor in my pocket.",
     },
     {
       name: "James Rodriguez",
@@ -53,7 +53,7 @@ export default function ReviewSection() {
       <div className=" mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-foreground mb-4">Loved by millions worldwide</h2>
-          <p className="text-xl text-muted-foreground">See what our users say about their SwiftPay experience</p>
+          <p className="text-xl text-muted-foreground">See what our users say about their OopsiPAY experience</p>
         </div>
 
         <Marquee

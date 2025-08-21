@@ -4,7 +4,7 @@ export default function GetStartedSection() {
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-foreground mb-4">Get started in minutes</h2>
-          <p className="text-xl text-muted-foreground">Join millions who trust SwiftPay with their money</p>
+          <p className="text-xl text-muted-foreground">Join millions who trust OopsiPAY with their money</p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">

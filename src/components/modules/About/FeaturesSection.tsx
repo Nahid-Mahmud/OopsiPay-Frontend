@@ -45,7 +45,7 @@ export default function FeaturesSection() {
         <div className="space-y-4">
           <h2 className="md:text-4xl text-xl font-bold text-center">Your Complete Payment Solution</h2>
           <p className="text-lg text-muted-foreground text-center max-w-lg mx-auto">
-            From daily transactions to international transfers, SwiftPay makes managing your money effortless.
+            From daily transactions to international transfers, OopsiPAY makes managing your money effortless.
           </p>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
