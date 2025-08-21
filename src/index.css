@@ -119,7 +119,7 @@
   }
 }
 
-/* Added custom animations for Wero-style effects */
+/* Added custom animations for  effects */
 @keyframes float {
   0%,
   100% {
@@ -137,16 +137,6 @@
   }
   50% {
     transform: translateY(20px) rotate(-2deg);
-  }
-}
-
-@keyframes pulse-glow {
-  0%,
-  100% {
-    box-shadow: 0 0 20px rgba(255, 79, 129, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 40px rgba(255, 79, 129, 0.6);
   }
 }
 
@@ -168,10 +158,6 @@
 
 .animate-float-reverse {
   animation: floatReverse 8s ease-in-out infinite;
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 3s ease-in-out infinite;
 }
 
 .animate-gradient {

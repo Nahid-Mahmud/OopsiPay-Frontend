@@ -1,3 +1,4 @@
+import HoverButton from "@/components/HoverButton";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useEffect, useState } from "react";
@@ -17,12 +18,12 @@ export default function HeroSection() {
   return (
     <div className="min-h-screen overflow-hidden relative">
       {/* Animated gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary via-secondary to-primary animate-gradient" />
+      <div className="absolute inset-0 bg-gradient-to-br from-primary via-violet-100 to-primary animate-gradient" />
 
       {/* Floating elements */}
       <div className="absolute inset-0 pointer-events-none">
         <div
-          className="absolute w-4 h-4 bg-white/20 rounded-full animate-float"
+          className="absolute w-4 h-4 bg-white rounded-full animate-float"
           style={{
             left: "10%",
             top: "20%",
@@ -30,7 +31,7 @@ export default function HeroSection() {
           }}
         />
         <div
-          className="absolute w-6 h-6 bg-white/15 rounded-full animate-float-reverse"
+          className="absolute w-6 h-6 bg-white rounded-full animate-float-reverse"
           style={{
             right: "15%",
             top: "30%",
@@ -38,7 +39,7 @@ export default function HeroSection() {
           }}
         />
         <div
-          className="absolute w-3 h-3 bg-white/25 rounded-full animate-float"
+          className="absolute w-3 h-3 bg-white rounded-full animate-float"
           style={{
             left: "80%",
             bottom: "40%",
@@ -46,7 +47,7 @@ export default function HeroSection() {
           }}
         />
         <div
-          className="absolute w-8 h-8 bg-white/10 rounded-full animate-float-reverse"
+          className="absolute w-8 h-8 bg-white rounded-full animate-float-reverse"
           style={{
             left: "5%",
             bottom: "20%",
@@ -96,19 +97,13 @@ export default function HeroSection() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Button
+              {/* <Button
                 size="lg"
                 className="bg-white text-primary hover:bg-white/90 font-dm-sans font-medium text-lg px-8 py-4 animate-pulse-glow"
               >
                 Download App
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="border-white text-black hover:bg-white hover:text-primary font-dm-sans font-medium text-lg px-8 py-4 bg-transparent"
-              >
-                Learn More
-              </Button>
+              </Button> */}
+              <HoverButton />
             </div>
           </div>
 
