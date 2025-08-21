@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent } from "@/components/ui/card";
-import React from "react";
-import { Mail, MessageCircle, Phone, MapPin } from "lucide-react";
+import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import React, { useState } from "react";
+import { toast } from "sonner";
 
 const cards = [
   {
@@ -37,6 +38,17 @@ const cards = [
 ];
 
 export default function ContactPage() {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      toast.success("Message sent successfully!");
+    }, 2000);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-16">
@@ -80,7 +92,7 @@ export default function ContactPage() {
             <h2 className="text-xl font-semibold text-gray-900 mb-2">Send us a message</h2>
             <p className="text-gray-600 mb-6">Fill out the form below and we'll get back to you within 24 hours.</p>
 
-            <form className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">First Name *</label>
@@ -110,15 +122,9 @@ export default function ContactPage() {
                 />
               </div>
 
-              <div className="flex items-start space-x-2">
-                <input type="checkbox" className="mt-1" />
-                <p className="text-sm text-gray-600">
-                  I agree to the <span className="text-gray-900 font-medium">Terms of Service</span> and{" "}
-                  <span className="text-gray-900 font-medium">Privacy Policy</span>
-                </p>
-              </div>
-
-              <Button className="w-full bg-gray-600 hover:bg-gray-700 text-white">Submit</Button>
+              <Button disabled={isLoading} type="submit" className="w-full bg-primary  cursor-pointer text-white">
+                {isLoading ? "Sending..." : "Submit"}
+              </Button>
             </form>
             <div className="grid md:grid-cols-2 gap-12 pt-8 border-t border-gray-200 text-sm mt-10">
               {/* Office Hours */}
