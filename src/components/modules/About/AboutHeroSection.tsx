@@ -19,7 +19,7 @@ export default function AboutHeroSection() {
           <p className="text-xl lg:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed mb-8">
             Your money, simplified. Send, receive, and manage your finances with the security and ease you deserve.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center  items-center mb-12">
             <HoverButton />
           </div>
           <div className="flex flex-wrap justify-center gap-3">
