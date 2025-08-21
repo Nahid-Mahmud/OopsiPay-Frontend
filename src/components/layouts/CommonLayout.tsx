@@ -5,7 +5,9 @@ export default function CommonLayout() {
   return (
     <div>
       <Navbar />
-      <Outlet />
+      <div className="md:pt-20 pt-10 ">
+        <Outlet />
+      </div>
     </div>
   );
 }
