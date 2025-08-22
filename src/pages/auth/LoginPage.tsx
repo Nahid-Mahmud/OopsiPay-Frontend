@@ -27,6 +27,9 @@ export default function LoginPage() {
       const res = await loginUserFn(values).unwrap();
       if (res.success) {
         toast.success("Login successful!");
+        // expire in 30 days
+        const expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+        document.cookie = `user=${true}; path=/; expires=${expires.toUTCString()}`;
         navigate("/", { replace: true });
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
