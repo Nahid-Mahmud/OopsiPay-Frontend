@@ -30,7 +30,7 @@ export const authApi = baseApi.injectEndpoints({
 
     sendOtp: builder.mutation<TResponse<null>, TOtp>({
       query: (data) => ({
-        url: "/otp/send",
+        url: "/otp/resend",
         method: "POST",
         data: data,
       }),
@@ -38,7 +38,7 @@ export const authApi = baseApi.injectEndpoints({
 
     verifyOtp: builder.mutation<TResponse<null>, TVerifyOtp>({
       query: (data) => ({
-        url: "/otp/verify",
+        url: "/otp/verify-user",
         method: "POST",
         data: data,
       }),
