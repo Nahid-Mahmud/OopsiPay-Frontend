@@ -2,8 +2,9 @@ import PasswordInput from "@/components/PasswordInput";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useRegisterMutation } from "@/redux/features/auth/auth.api";
-import { registerUserValidationSchema } from "@/validations/User.zod.validation";
+import { useRegisterMutation } from "@/redux/features/user/user.api";
+
+import { registerUserValidationSchema } from "@/validations/user.zod.validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
