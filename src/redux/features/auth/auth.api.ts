@@ -1,14 +1,9 @@
 import { baseApi } from "@/redux/baseApi";
+import type { TResponse } from "@/types/response.types";
+import type { IUser } from "@/types/user.types";
 
 type TOtp = {
   email: string;
-};
-
-type TResponse<T> = {
-  success: boolean;
-  message: string;
-  data: T;
-  statusCode: number;
 };
 
 type TVerifyOtp = {
@@ -18,9 +13,9 @@ type TVerifyOtp = {
 
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    register: builder.mutation({
+    register: builder.mutation<TResponse<IUser>, Partial<IUser>>({
       query: (data) => ({
-        url: "/user/register",
+        url: "/user/create",
         method: "POST",
         data: data,
       }),
