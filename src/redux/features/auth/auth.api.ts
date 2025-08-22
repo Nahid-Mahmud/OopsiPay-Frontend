@@ -43,6 +43,22 @@ export const authApi = baseApi.injectEndpoints({
       }),
     }),
 
+    forgetPassword: builder.mutation<TResponse<null>, { email: string }>({
+      query: (data) => ({
+        url: "/auth/forgot-password",
+        method: "POST",
+        data: data,
+      }),
+    }),
+
+    resetPassword: builder.mutation<TResponse<null>, { newPassword: string; id: string; token: string }>({
+      query: (data) => ({
+        url: `/auth/reset-password?id=${data.id}&token=${data.token}`,
+        method: "POST",
+        data: data,
+      }),
+    }),
+
     logout: builder.mutation({
       query: () => ({
         url: "/auth/logout",
@@ -52,4 +68,11 @@ export const authApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useLoginMutation, useSendOtpMutation, useVerifyOtpMutation, useLogoutMutation } = authApi;
+export const {
+  useLoginMutation,
+  useSendOtpMutation,
+  useVerifyOtpMutation,
+  useForgetPasswordMutation,
+  useLogoutMutation,
+  useResetPasswordMutation,
+} = authApi;
