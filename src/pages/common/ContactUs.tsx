@@ -110,8 +110,8 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Company</label>
-                <Input placeholder="Your Company" className="bg-white" />
+                <label className="block text-sm font-medium text-gray-700 mb-1">Subject *</label>
+                <Input placeholder="Subject" className="bg-white" />
               </div>
 
               <div>
@@ -152,7 +152,7 @@ export default function ContactPage() {
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Email</span>
-                    <span className="text-gray-900">hello@company.com</span>
+                    <span className="text-gray-900">hello@OopsiPAY.com</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Phone</span>
