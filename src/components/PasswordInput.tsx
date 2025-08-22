@@ -2,35 +2,22 @@ import { Eye, EyeClosed } from "lucide-react";
 import { useState } from "react";
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 import { Input } from "./ui/input";
-import type { UseFormReturn } from "react-hook-form";
+import type { UseFormReturn, FieldValues, Path } from "react-hook-form";
 
-export default function PasswordInput({
+type PasswordInputProps<T extends FieldValues> = {
+  form: UseFormReturn<T>;
+  name?: Path<T>;
+};
+
+export default function PasswordInput<T extends FieldValues>({
   form,
-}: {
-  form: UseFormReturn<
-    {
-      firstName: string;
-      lastName: string;
-      email: string;
-      password: string;
-      cPassword: string;
-    },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    any,
-    {
-      firstName: string;
-      lastName: string;
-      email: string;
-      password: string;
-      cPassword: string;
-    }
-  >;
-}) {
+  name = "password" as Path<T>,
+}: PasswordInputProps<T>) {
   const [showPassword, setShowPassword] = useState(false);
   return (
     <FormField
       control={form.control}
-      name="password"
+      name={name}
       render={({ field }) => (
         <FormItem>
           <div className="flex justify-between">
