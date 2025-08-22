@@ -79,9 +79,11 @@ export default function Navbar() {
               <line x1="3" y1="18" x2="21" y2="18" />
             </svg>
           </button>
-          <Button variant="secondary" className="font-dm-sans font-medium hidden md:inline-flex">
-            Get Started
-          </Button>
+          <Link to="/register" className="cursor-pointer">
+            <Button variant="secondary" className="font-dm-sans font-medium cursor-pointer">
+              Get Started
+            </Button>
+          </Link>
         </nav>
       </header>
 
@@ -132,9 +134,11 @@ export default function Navbar() {
                   {item.name}
                 </Link>
               ))}
-              <Button variant="secondary" className="font-dm-sans font-medium mt-8">
-                Get Started
-              </Button>
+              <Link to="/register">
+                <Button variant="secondary" className="font-dm-sans font-medium">
+                  Get Started
+                </Button>
+              </Link>
             </nav>
           </aside>
         </>
