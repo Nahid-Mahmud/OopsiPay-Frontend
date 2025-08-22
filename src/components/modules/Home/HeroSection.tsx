@@ -1,19 +1,7 @@
 import HoverButton from "@/components/HoverButton";
 import { Card } from "@/components/ui/card";
-import { useEffect, useState } from "react";
 
 export default function HeroSection() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
-
   return (
     <div className="min-h-screen overflow-hidden relative">
       {/* Animated gradient background */}
@@ -26,7 +14,6 @@ export default function HeroSection() {
           style={{
             left: "10%",
             top: "20%",
-            transform: `translate(${mousePosition.x * 0.01}px, ${mousePosition.y * 0.01}px)`,
           }}
         />
         <div
@@ -34,7 +21,6 @@ export default function HeroSection() {
           style={{
             right: "15%",
             top: "30%",
-            transform: `translate(${mousePosition.x * -0.02}px, ${mousePosition.y * 0.015}px)`,
           }}
         />
         <div
@@ -42,7 +28,6 @@ export default function HeroSection() {
           style={{
             left: "80%",
             bottom: "40%",
-            transform: `translate(${mousePosition.x * 0.015}px, ${mousePosition.y * -0.01}px)`,
           }}
         />
         <div
@@ -50,7 +35,6 @@ export default function HeroSection() {
           style={{
             left: "5%",
             bottom: "20%",
-            transform: `translate(${mousePosition.x * -0.01}px, ${mousePosition.y * 0.02}px)`,
           }}
         />
       </div>
