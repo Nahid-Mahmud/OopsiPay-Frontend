@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
-import { useVerifyOtpMutation } from "@/redux/features/auth/auth.api";
+import { useSendOtpMutation, useVerifyOtpMutation } from "@/redux/features/auth/auth.api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -20,8 +20,21 @@ export default function VerifyEmailPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const [verifyOtp, { isLoading }] = useVerifyOtpMutation();
+  const [resendOtpFn, { isLoading: isResending }] = useSendOtpMutation();
+  const [sendOtpTime, setSendOtpTime] = useState<number | null>(null);
 
   const [pageLoading, setPageLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSendOtpTime((prev) => {
+        if (prev === null) return null;
+        if (prev <= 1) return null;
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     if (!location.state?.email) {
@@ -60,6 +73,26 @@ export default function VerifyEmailPage() {
     }
   };
   console.log(location.state?.email);
+
+  const handleResendOtp = async () => {
+    const toastId = toast.loading("Resending OTP...");
+    try {
+      const res = await resendOtpFn({
+        email: location.state?.email,
+      }).unwrap();
+      if (res.success) {
+        toast.dismiss(toastId);
+        toast.success("OTP resent successfully!");
+
+        setSendOtpTime(5);
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      toast.error("Failed to resend OTP");
+    } finally {
+      toast.dismiss(toastId);
+    }
+  };
 
   if (pageLoading) {
     return (
@@ -104,6 +137,20 @@ export default function VerifyEmailPage() {
               <Button disabled={isLoading} type="submit" className="w-full cursor-pointer">
                 Verify {isLoading && <Loader2 className="inline-block h-4 w-4 animate-spin" />}
               </Button>
+            </div>
+            <div className="mt-5 ">
+              <div className="flex items-center justify-between text-sm text-muted-foreground">
+                <p className=""> Didn't receive the code?</p>{" "}
+                <Button
+                  type="button"
+                  onClick={handleResendOtp}
+                  disabled={sendOtpTime !== null || isResending}
+                  className="cursor-pointer disabled:cursor-not-allowed"
+                  variant="link"
+                >
+                  Resend {sendOtpTime !== null ? `(${sendOtpTime})` : ""}
+                </Button>
+              </div>
             </div>
           </div>
         </form>
