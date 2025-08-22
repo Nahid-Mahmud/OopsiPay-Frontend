@@ -12,9 +12,9 @@ export default function HoverButton() {
         {/* <svg className="w-4 h-4 transition-transform duration-200 group-hover:rotate-45" viewBox="0 0 24 24">
           <circle fill="currentColor" r="11" cy="12" cx="12"></circle>
           <path
-            stroke-linejoin="round"
-            stroke-linecap="round"
-            stroke-width="2"
+            strokeLinejoin="round"
+            strokeLinecap="round"
+            strokeWidth="2"
             stroke="white"
             d="M7.5 16.5L16.5 7.5M16.5 7.5H10.5M16.5 7.5V13.5"
           ></path>
@@ -27,9 +27,9 @@ export default function HoverButton() {
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
           className="lucide lucide-corner-left-down-icon lucide-corner-left-down group-hover:rotate-90 transition-transform duration-200"
         >
           <path d="m14 15-5 5-5-5" />
