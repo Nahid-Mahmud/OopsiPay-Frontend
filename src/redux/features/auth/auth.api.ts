@@ -1,4 +1,5 @@
 import { baseApi } from "@/redux/baseApi";
+import type { IContactUs } from "@/types/contact-us.types";
 import type { TResponse } from "@/types/response.types";
 import type { IUser } from "@/types/user.types";
 
@@ -65,6 +66,14 @@ export const authApi = baseApi.injectEndpoints({
         method: "POST",
       }),
     }),
+
+    contactUs: builder.mutation<TResponse<null>, IContactUs>({
+      query: (data) => ({
+        url: "/contact-us",
+        method: "POST",
+        data: data,
+      }),
+    }),
   }),
 });
 
@@ -75,4 +84,5 @@ export const {
   useForgetPasswordMutation,
   useLogoutMutation,
   useResetPasswordMutation,
+  useContactUsMutation,
 } = authApi;
