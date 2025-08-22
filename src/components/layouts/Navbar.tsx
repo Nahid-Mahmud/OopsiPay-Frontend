@@ -79,7 +79,7 @@ export default function Navbar() {
               <line x1="3" y1="18" x2="21" y2="18" />
             </svg>
           </button>
-          <Link to="/register" className="cursor-pointer">
+          <Link to="/login" className="cursor-pointer">
             <Button variant="secondary" className="font-dm-sans font-medium cursor-pointer">
               Get Started
             </Button>
