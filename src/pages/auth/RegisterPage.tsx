@@ -2,14 +2,18 @@ import PasswordInput from "@/components/PasswordInput";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useRegisterMutation } from "@/redux/features/auth/auth.api";
 import { registerUserValidationSchema } from "@/validations/User.zod.validation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { toast } from "sonner";
 import z from "zod";
 
 export default function RegisterPage() {
-  // const [showPassword, setShowPassword] = useState(false);
+  const [registerUserFn, { isLoading }] = useRegisterMutation();
+  const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof registerUserValidationSchema>>({
     resolver: zodResolver(registerUserValidationSchema),
@@ -22,11 +26,22 @@ export default function RegisterPage() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof registerUserValidationSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
-  }
+  const onSubmit = async (values: z.infer<typeof registerUserValidationSchema>) => {
+    try {
+      const res = await registerUserFn(values).unwrap();
+
+      if (res.success) {
+        toast.success("Registration successful! Please check your email to verify your account.");
+        navigate("/verify-email", {
+          state: { email: values.email },
+        });
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      toast.error("Registration failed. Please try again later.");
+    }
+  };
 
   return (
     <section className="flex min-h-screen bg-zinc-50 px-4 py-16 md:py-32 dark:bg-transparent">
@@ -117,8 +132,8 @@ export default function RegisterPage() {
                 />
               </div>
 
-              <Button type="submit" className="w-full">
-                Register Account
+              <Button disabled={isLoading} type="submit" className="w-full cursor-pointer">
+                Register Account {isLoading && <Loader2 className="inline-block h-4 w-4 animate-spin" />}
               </Button>
             </div>
           </div>
@@ -127,7 +142,7 @@ export default function RegisterPage() {
             <p className="text-accent-foreground text-center text-sm">
               Have an account ?
               <Button asChild variant="link" className="px-2">
-                <Link to="#">Sign In</Link>
+                <Link to="/login">Sign In</Link>
               </Button>
             </p>
           </div>
