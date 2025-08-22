@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Button } from "../ui/button";
 import { Link } from "react-router";
+import NavConditionalButton from "../NavConditionalButton";
 
 const navItems: { name: string; href: string }[] = [
   { name: "About", href: "/about" },
@@ -12,8 +12,6 @@ const navItems: { name: string; href: string }[] = [
 export default function Navbar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [scroll, setScroll] = useState(false);
-
-  //   disable scroll when sidebar is open
 
   useEffect(() => {
     if (sidebarOpen) {
@@ -79,11 +77,8 @@ export default function Navbar() {
               <line x1="3" y1="18" x2="21" y2="18" />
             </svg>
           </button>
-          <Link to="/login" className="cursor-pointer">
-            <Button variant="secondary" className="font-dm-sans font-medium cursor-pointer">
-              Get Started
-            </Button>
-          </Link>
+
+          <NavConditionalButton />
         </nav>
       </header>
 
@@ -134,11 +129,8 @@ export default function Navbar() {
                   {item.name}
                 </Link>
               ))}
-              <Link to="/register">
-                <Button variant="secondary" className="font-dm-sans font-medium">
-                  Get Started
-                </Button>
-              </Link>
+
+              <NavConditionalButton />
             </nav>
           </aside>
         </>
