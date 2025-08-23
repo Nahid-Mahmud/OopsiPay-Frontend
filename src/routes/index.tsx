@@ -11,7 +11,7 @@ import FAQ from "@/pages/common/FAQ";
 import Features from "@/pages/common/Features";
 import HomePage from "@/pages/common/Home";
 import { generateRoutes } from "@/utils/generateRoutes";
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, Navigate } from "react-router";
 import { AdminSidebarItems } from "./AdminSidebarItems";
 
 export const router = createBrowserRouter([
@@ -66,6 +66,12 @@ export const router = createBrowserRouter([
   {
     path: "/admin",
     Component: DashboardLayout,
-    children: [...generateRoutes(AdminSidebarItems)],
+    children: [
+      {
+        index: true,
+        element: <Navigate to="/admin/analytics" replace />,
+      },
+      ...generateRoutes(AdminSidebarItems),
+    ],
   },
 ]);
