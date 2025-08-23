@@ -1,11 +1,12 @@
 import Profile from "@/components/Profile";
+import WalletPage from "@/components/Wallet";
 import AllAgents from "@/pages/admin/AllAgents";
 import AllTransactions from "@/pages/admin/AllTransactions";
 import AllUsersPage from "@/pages/admin/AllUsers";
 import AllWallets from "@/pages/admin/AllWallets";
 import Analytics from "@/pages/admin/Analytics";
 import type { ISidebarItem } from "@/types";
-import { List } from "lucide-react";
+import { ArrowLeftRight, ChartLine, HatGlasses, Settings, Users, Wallet } from "lucide-react";
 
 export const AdminSidebarItems: ISidebarItem[] = [
   {
@@ -16,7 +17,19 @@ export const AdminSidebarItems: ISidebarItem[] = [
         title: "Analytics",
         url: "/admin/analytics",
         Component: Analytics,
-        icon: <List />,
+        icon: <ChartLine />,
+      },
+    ],
+  },
+  {
+    title: "My Wallet",
+    url: "#",
+    items: [
+      {
+        title: "Wallet",
+        url: "/admin/wallet",
+        Component: WalletPage,
+        icon: <Wallet />,
       },
     ],
   },
@@ -28,22 +41,25 @@ export const AdminSidebarItems: ISidebarItem[] = [
         title: "All Users",
         url: "/admin/users",
         Component: AllUsersPage,
+        icon: <Users />,
       },
       {
         title: "All Agents",
         url: "/admin/agents",
         Component: AllAgents,
+        icon: <HatGlasses />,
       },
     ],
   },
   {
-    title: "Wallets",
+    title: "Wallet Management",
     url: "#",
     items: [
       {
         title: "All Wallets",
         url: "/admin/wallets",
         Component: AllWallets,
+        icon: <Wallet />,
       },
     ],
   },
@@ -55,6 +71,7 @@ export const AdminSidebarItems: ISidebarItem[] = [
         title: "All Transactions",
         url: "/admin/transactions",
         Component: AllTransactions,
+        icon: <ArrowLeftRight />,
       },
     ],
   },
@@ -66,6 +83,7 @@ export const AdminSidebarItems: ISidebarItem[] = [
         title: "Profile",
         url: "/admin/settings/profile",
         Component: Profile,
+        icon: <Settings />,
       },
     ],
   },
