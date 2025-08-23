@@ -18,8 +18,6 @@ import { AdminSidebarItems } from "@/routes/AdminSidebarItems";
 import type { ISidebarItem } from "@/types";
 import { Link } from "react-router";
 
-console.log(AdminSidebarItems);
-
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
@@ -29,7 +27,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarGroupContent>
             <SidebarMenu>
               {AdminSidebarItems.map((item, index) => (
-                <SidebarItem key={index} item={item} />
+                <SidebarItem key={index} item={item} isFirst={index === 0} />
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
@@ -40,12 +38,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   );
 }
 
-function SidebarItem({ item }: { item: ISidebarItem }) {
+function SidebarItem({ item, isFirst = false }: { item: ISidebarItem; isFirst?: boolean }) {
   return (
     <SidebarMenuItem>
       <Collapsible
         className="group/collapsible [&[data-state=open]>button>svg:first-child]:rotate-90"
-        defaultOpen={false}
+        defaultOpen={isFirst}
       >
         <CollapsibleTrigger asChild>
           <SidebarMenuButton>
