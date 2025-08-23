@@ -1,4 +1,5 @@
 import CommonLayout from "@/components/layouts/CommonLayout";
+import DashboardLayout from "@/components/layouts/DashboardLayout";
 import ForgetPasswordPage from "@/pages/auth/ForgetPasswordPage";
 import LoginPage from "@/pages/auth/LoginPage";
 import RegisterPage from "@/pages/auth/RegisterPage";
@@ -9,7 +10,9 @@ import ContactPage from "@/pages/common/ContactUs";
 import FAQ from "@/pages/common/FAQ";
 import Features from "@/pages/common/Features";
 import HomePage from "@/pages/common/Home";
+import { generateRoutes } from "@/utils/generateRoutes";
 import { createBrowserRouter } from "react-router";
+import { AdminSidebarItems } from "./AdminSidebarItems";
 
 export const router = createBrowserRouter([
   {
@@ -58,5 +61,11 @@ export const router = createBrowserRouter([
   {
     path: "/verify-email",
     Component: VerifyEmailPage,
+  },
+
+  {
+    path: "/admin",
+    Component: DashboardLayout,
+    children: [...generateRoutes(AdminSidebarItems)],
   },
 ]);
