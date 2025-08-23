@@ -12,9 +12,17 @@ export const userApi = baseApi.injectEndpoints({
       }),
     }),
 
-    userInfo: builder.query<TResponse<null>, void>({
+    userInfo: builder.query<TResponse<IUser>, void>({
       query: () => ({
         url: "/user/me",
+        method: "GET",
+      }),
+      providesTags: ["User"],
+    }),
+
+    getAllUUsers: builder.query<TResponse<IUser[]>, void>({
+      query: () => ({
+        url: "/user",
         method: "GET",
       }),
       providesTags: ["User"],

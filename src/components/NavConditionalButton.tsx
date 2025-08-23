@@ -15,8 +15,9 @@ function NavConditionalButton() {
     skip: !isUserLoggedIn, // Only fetch when user is logged in
   });
 
-  console.log(userInfo?.data);
-  console.log(isUserLoggedIn);
+  const userRole = userInfo?.data?.role;
+
+  const navigationRoute = userRole === "USER" ? "/admin" : userRole === "AGENT" ? "/agent" : "/user";
 
   if (isUserLoggedIn === null) {
     // Loading state while checking login status
@@ -27,10 +28,10 @@ function NavConditionalButton() {
     );
   }
 
-  if (isUserLoggedIn) {
+  if (isUserLoggedIn && userInfo?.data && userInfo.data.role) {
     // User is logged in - show user info or dashboard link
     return (
-      <Link to="/dashboard" className="cursor-pointer">
+      <Link to={navigationRoute} className="cursor-pointer">
         <Button variant="secondary" className="font-dm-sans font-medium cursor-pointer">
           Dashboard
         </Button>
