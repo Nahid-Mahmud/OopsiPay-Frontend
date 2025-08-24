@@ -1,16 +1,30 @@
-import ChangePassword from "@/components/ChangePassword";
-import { ChangePinPage } from "@/components/ChangePin";
-import MyTransactions from "@/components/MyTransactions";
-import MyWallet from "@/components/MyWallet";
-import { Profile } from "@/components/Profile";
+// import ChangePassword from "@/components/ChangePassword";
+// import { ChangePinPage } from "@/components/ChangePin";
+// import MyTransactions from "@/components/MyTransactions";
+// import MyWallet from "@/components/MyWallet";
+// import { Profile } from "@/components/Profile";
 
-import AllAgents from "@/pages/admin/AllAgents";
-import AllTransactions from "@/pages/admin/AllTransactions";
-import AllUsersPage from "@/pages/admin/AllUsers";
-import AllWallets from "@/pages/admin/AllWallets";
-import Analytics from "@/pages/admin/Analytics";
+// import AllAgents from "@/pages/admin/AllAgents";
+// import AllTransactions from "@/pages/admin/AllTransactions";
+// import AllUsersPage from "@/pages/admin/AllUsers";
+// import AllWallets from "@/pages/admin/AllWallets";
+
 import type { ISidebarItem } from "@/types";
 import { ArrowLeftRight, ChartLine, HatGlasses, Lock, Settings, Users, Wallet } from "lucide-react";
+import { lazy } from "react";
+
+const Analytics = lazy(() => import("@/pages/admin/Analytics"));
+const ChangePassword = lazy(() => import("@/components/ChangePassword"));
+const ChangePinPage = lazy(() =>
+  import("@/components/ChangePin").then((module) => ({ default: module.ChangePinPage }))
+);
+const MyTransactions = lazy(() => import("@/components/MyTransactions"));
+const MyWallet = lazy(() => import("@/components/MyWallet"));
+const Profile = lazy(() => import("@/components/Profile").then((module) => ({ default: module.Profile })));
+const AllAgents = lazy(() => import("@/pages/admin/AllAgents"));
+const AllTransactions = lazy(() => import("@/pages/admin/AllTransactions"));
+const AllUsersPage = lazy(() => import("@/pages/admin/AllUsers"));
+const AllWallets = lazy(() => import("@/pages/admin/AllWallets"));
 
 export const AdminSidebarItems: ISidebarItem[] = [
   {
