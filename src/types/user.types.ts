@@ -14,4 +14,8 @@ export interface IUser {
   _id: string;
   createdAt: string;
   updatedAt: string;
+  pin?: boolean;
+  profilePicture?: string;
+  phone?: string;
+  address?: string;
 }
