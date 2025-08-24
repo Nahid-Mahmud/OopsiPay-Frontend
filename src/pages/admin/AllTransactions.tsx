@@ -1,7 +1,11 @@
+import { TransactionsTable } from "@/components/modules/Admin/Transactions/TransactionsTable";
+
 export default function AllTransactions() {
   return (
     <div>
-      <h1 className="text-lg">This is AllTransactions component</h1>
+      <div className="container mx-auto py-8">
+        <TransactionsTable />
+      </div>
     </div>
-  )
+  );
 }
