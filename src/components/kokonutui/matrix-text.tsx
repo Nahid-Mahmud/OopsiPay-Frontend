@@ -1,13 +1,3 @@
-/**
- * @author: @dorian_baffier
- * @description: Matrix Text
- * @version: 1.0.0
- * @date: 2025-06-26
- * @license: MIT
- * @website: https://kokonutui.com
- * @github: https://github.com/kokonut-labs/kokonutui
- */
-
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
