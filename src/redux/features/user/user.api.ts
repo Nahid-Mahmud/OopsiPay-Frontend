@@ -20,10 +20,11 @@ export const userApi = baseApi.injectEndpoints({
       providesTags: ["User"],
     }),
 
-    getAllUsers: builder.query<TResponse<IUser[]>, void>({
-      query: () => ({
-        url: "/user",
+    getAllUsers: builder.query<TResponse<IUser[]>, Record<string, string>>({
+      query: (params) => ({
+        url: "/user/get-all",
         method: "GET",
+        params,
       }),
       providesTags: ["User"],
     }),
