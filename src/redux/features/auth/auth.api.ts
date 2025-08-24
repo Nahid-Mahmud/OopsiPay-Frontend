@@ -36,6 +36,14 @@ export const authApi = baseApi.injectEndpoints({
       }),
     }),
 
+    changePassword: builder.mutation<TResponse<null>, { oldPassword: string; newPassword: string }>({
+      query: (data) => ({
+        url: "/auth/change-password",
+        method: "PATCH",
+        data: data,
+      }),
+    }),
+
     verifyOtp: builder.mutation<TResponse<null>, TVerifyOtp>({
       query: (data) => ({
         url: "/otp/verify-user",
@@ -85,4 +93,5 @@ export const {
   useLogoutMutation,
   useResetPasswordMutation,
   useContactUsMutation,
+  useChangePasswordMutation,
 } = authApi;
