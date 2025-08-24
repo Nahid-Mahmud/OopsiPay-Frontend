@@ -35,7 +35,8 @@ export function AgentManagementTable() {
         agent.firstName.toLowerCase().includes(searchString) ||
         agent.lastName.toLowerCase().includes(searchString) ||
         agent.email.toLowerCase().includes(searchString) ||
-        agent.role.toLowerCase().includes(searchString)
+        agent.role.toLowerCase().includes(searchString) ||
+        agent._id.toLowerCase().includes(searchString)
     );
   }, [agentList, searchTerm]);
 

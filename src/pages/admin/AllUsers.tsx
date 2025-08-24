@@ -35,7 +35,8 @@ export function UserManagementTable() {
         user.firstName.toLowerCase().includes(searchString) ||
         user.lastName.toLowerCase().includes(searchString) ||
         user.email.toLowerCase().includes(searchString) ||
-        user.role.toLowerCase().includes(searchString)
+        user.role.toLowerCase().includes(searchString) ||
+        user._id.toLowerCase().includes(searchString)
     );
   }, [userList, searchTerm]);
 
