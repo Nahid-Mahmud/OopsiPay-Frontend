@@ -9,9 +9,13 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { Outlet } from "react-router";
+import { Outlet, useLocation } from "react-router";
 
 export default function DashboardLayout() {
+  // get routes like /admin/analytics
+  const location = useLocation();
+  const breadcrumbs = location.pathname.split("/").filter(Boolean);
+
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -21,7 +25,7 @@ export default function DashboardLayout() {
           <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
           <Breadcrumb>
             <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
+              {/* <BreadcrumbItem className="hidden md:block">
                 <BreadcrumbLink href="#">components</BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator className="hidden md:block" />
@@ -31,7 +35,22 @@ export default function DashboardLayout() {
               <BreadcrumbSeparator className="hidden md:block" />
               <BreadcrumbItem>
                 <BreadcrumbPage>button.tsx</BreadcrumbPage>
-              </BreadcrumbItem>
+              </BreadcrumbItem> */}
+
+              {breadcrumbs.map((crumb, index) => (
+                <span key={index} className="flex items-center">
+                  {index > 0 && <BreadcrumbSeparator className="hidden md:block" />}
+                  <BreadcrumbItem>
+                    {index === breadcrumbs.length - 1 ? (
+                      <BreadcrumbPage className="capitalize">{crumb}</BreadcrumbPage>
+                    ) : (
+                      <BreadcrumbLink href={`/${breadcrumbs.slice(0, index + 1).join("/")}`} className="capitalize">
+                        {crumb}
+                      </BreadcrumbLink>
+                    )}
+                  </BreadcrumbItem>
+                </span>
+              ))}
             </BreadcrumbList>
           </Breadcrumb>
         </header>

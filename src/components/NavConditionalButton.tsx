@@ -17,7 +17,7 @@ function NavConditionalButton() {
 
   const userRole = userInfo?.data?.role;
 
-  const navigationRoute = userRole === "USER" ? "/admin" : userRole === "AGENT" ? "/agent" : "/user";
+  const navigationRoute = userRole === "USER" ? "/user" : userRole === "AGENT" ? "/agent" : "/admin";
 
   if (isUserLoggedIn === null) {
     // Loading state while checking login status
