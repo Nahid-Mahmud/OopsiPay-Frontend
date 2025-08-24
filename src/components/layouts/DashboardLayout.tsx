@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { Outlet, useLocation } from "react-router";
+import { Link, Outlet, useLocation } from "react-router";
 
 export default function DashboardLayout() {
   // get routes like /admin/analytics
@@ -44,8 +44,8 @@ export default function DashboardLayout() {
                     {index === breadcrumbs.length - 1 ? (
                       <BreadcrumbPage className="capitalize">{crumb}</BreadcrumbPage>
                     ) : (
-                      <BreadcrumbLink href={`/${breadcrumbs.slice(0, index + 1).join("/")}`} className="capitalize">
-                        {crumb}
+                      <BreadcrumbLink asChild className="capitalize">
+                        <Link to={`/${breadcrumbs.slice(0, index + 1).join("/")}`}>{crumb}</Link>
                       </BreadcrumbLink>
                     )}
                   </BreadcrumbItem>
