@@ -37,7 +37,30 @@ export const userApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["User"],
     }),
+
+    changePin: builder.mutation<TResponse<null>, { oldPin: string; newPin: string }>({
+      query: (data) => ({
+        url: "/user/change-pin",
+        method: "PATCH",
+        data: data,
+      }),
+    }),
+
+    setPin: builder.mutation<TResponse<null>, { pin: string }>({
+      query: (data) => ({
+        url: "/user/set-pin",
+        method: "PATCH",
+        data: data,
+      }),
+    }),
   }),
 });
 
-export const { useRegisterMutation, useUserInfoQuery, useGetAllUsersQuery, useUpdateUserMutation } = userApi;
+export const {
+  useRegisterMutation,
+  useUserInfoQuery,
+  useGetAllUsersQuery,
+  useUpdateUserMutation,
+  useChangePinMutation,
+  useSetPinMutation,
+} = userApi;
