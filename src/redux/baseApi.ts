@@ -4,5 +4,5 @@ import axiosBaseQuery from "./axiosBaseQuery";
 export const baseApi = createApi({
   baseQuery: axiosBaseQuery(),
   endpoints: () => ({}),
-  tagTypes: ["User"],
+  tagTypes: ["User", "Transaction"],
 });
