@@ -20,7 +20,7 @@ export const userApi = baseApi.injectEndpoints({
       providesTags: ["User"],
     }),
 
-    getAllUUsers: builder.query<TResponse<IUser[]>, void>({
+    getAllUsers: builder.query<TResponse<IUser[]>, void>({
       query: () => ({
         url: "/user",
         method: "GET",
@@ -30,4 +30,4 @@ export const userApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useRegisterMutation, useUserInfoQuery } = userApi;
+export const { useRegisterMutation, useUserInfoQuery, useGetAllUsersQuery } = userApi;
