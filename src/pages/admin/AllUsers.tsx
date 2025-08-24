@@ -1,48 +1,37 @@
-import { useState, useMemo } from "react";
+import { ConfirmationDialog } from "@/components/ConfirmationDialog";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { MoreHorizontal, Trash2, UserCheck, UserX, Shield, Search, ChevronLeft, ChevronRight } from "lucide-react";
-import type { IsActive } from "@/types/user.types";
-import { useGetAllUsersQuery } from "@/redux/features/user/user.api";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useGetAllUsersQuery, useUpdateUserMutation } from "@/redux/features/user/user.api";
+import type { IsActive, IUser, TRole } from "@/types/user.types";
+import { USER_STATUS, USER_ROLES } from "@/constants/user.constants";
+import { ChevronLeft, ChevronRight, MoreHorizontal, Search, Shield, Trash2, UserCheck, UserX } from "lucide-react";
+import { useMemo, useState } from "react";
+import { toast } from "sonner";
 
 export function UserManagementTable() {
+  const [updateUserFn, { isLoading: updateUserLoading }] = useUpdateUserMutation();
+
   const { data, isLoading, isError } = useGetAllUsersQuery({
-    role: "USER",
+    role: USER_ROLES.USER,
   });
 
   console.log(data);
 
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
+
   const itemsPerPage = 10;
 
-  // Get users from API data with memoization
-  const userList = useMemo(() => data?.data || [], [data?.data]);
+  const userList = useMemo(() => (data?.data as IUser[]) || [], [data?.data]);
 
   const filteredUsers = useMemo(() => {
     const searchString = (searchTerm || "").toLowerCase();
     return userList.filter(
-      (user) =>
+      (user: IUser) =>
         user.firstName.toLowerCase().includes(searchString) ||
         user.lastName.toLowerCase().includes(searchString) ||
         user.email.toLowerCase().includes(searchString) ||
@@ -56,6 +45,86 @@ export function UserManagementTable() {
   }, [filteredUsers, currentPage]);
 
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+
+  const handleStatusChange = async (userId: string, newStatus: IsActive) => {
+    console.log(`Updating user ${userId} status to ${newStatus}`);
+
+    const updateData = {
+      isActive: newStatus,
+    };
+
+    try {
+      const res = await updateUserFn({ id: userId, data: updateData }).unwrap();
+
+      if (res.success) {
+        toast.success("User status updated successfully.");
+      }
+    } catch (error) {
+      console.error("Error updating user:", error);
+      toast.error("Failed to update user status.");
+    }
+  };
+
+  const handleDeleteUser = async (userId: string, isDeleted: boolean) => {
+    console.log(`Updating user ${userId} delete status to ${!isDeleted}`);
+
+    const updateData = {
+      isDeleted: !isDeleted,
+    };
+
+    try {
+      const res = await updateUserFn({ id: userId, data: updateData }).unwrap();
+      if (res.success) {
+        toast.success(`User ${!isDeleted ? "deleted" : "recovered"} successfully.`);
+      }
+    } catch (error) {
+      console.error("Error updating user delete status:", error);
+      toast.error(`Failed to ${!isDeleted ? "delete" : "recover"} user.`);
+    }
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value || "");
+    setCurrentPage(1);
+  };
+
+  const getStatusBadge = (status: IsActive) => {
+    switch (status) {
+      case USER_STATUS.ACTIVE:
+        return (
+          <Badge variant="default" className="bg-green-100 text-green-800 hover:bg-green-100">
+            Active
+          </Badge>
+        );
+      case USER_STATUS.INACTIVE:
+        return <Badge variant="secondary">Inactive</Badge>;
+      case USER_STATUS.BLOCKED:
+        return <Badge variant="destructive">Blocked</Badge>;
+      default:
+        return <Badge variant="outline">Unknown</Badge>;
+    }
+  };
+
+  const getRoleBadge = (role: TRole) => {
+    return role === USER_ROLES.ADMIN ? (
+      <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+        <Shield className="w-3 h-3 mr-1" />
+        {role}
+      </Badge>
+    ) : (
+      <Badge variant="outline">{role}</Badge>
+    );
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
   // Handle loading and error states
   if (isLoading) {
@@ -79,6 +148,7 @@ export function UserManagementTable() {
                 <TableHead>Role</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Verified</TableHead>
+                <TableHead>Deleted</TableHead>
                 <TableHead>Created</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
@@ -90,6 +160,9 @@ export function UserManagementTable() {
                     <div className="flex items-center space-x-2">
                       <div className="h-4 w-24 bg-muted animate-pulse rounded"></div>
                     </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="h-4 w-32 bg-muted animate-pulse rounded"></div>
                   </TableCell>
                   <TableCell>
                     <div className="h-4 w-32 bg-muted animate-pulse rounded"></div>
@@ -133,59 +206,6 @@ export function UserManagementTable() {
     );
   }
 
-  const handleStatusChange = (userId: string, newStatus: IsActive) => {
-    // TODO: Implement API call to update user status
-    console.log(`Updating user ${userId} status to ${newStatus}`);
-  };
-
-  const handleDeleteUser = (userId: string) => {
-    // TODO: Implement API call to delete user
-    console.log(`Deleting user ${userId}`);
-  };
-
-  const handleSearchChange = (value: string) => {
-    setSearchTerm(value || "");
-    setCurrentPage(1);
-  };
-
-  const getStatusBadge = (status: IsActive) => {
-    switch (status) {
-      case "ACTIVE":
-        return (
-          <Badge variant="default" className="bg-green-100 text-green-800 hover:bg-green-100">
-            Active
-          </Badge>
-        );
-      case "INACTIVE":
-        return <Badge variant="secondary">Inactive</Badge>;
-      case "BLOCKED":
-        return <Badge variant="destructive">Blocked</Badge>;
-      default:
-        return <Badge variant="outline">Unknown</Badge>;
-    }
-  };
-
-  const getRoleBadge = (role: string) => {
-    return role === "ADMIN" ? (
-      <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
-        <Shield className="w-3 h-3 mr-1" />
-        {role}
-      </Badge>
-    ) : (
-      <Badge variant="outline">{role}</Badge>
-    );
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
   return (
     <Card className="p-5">
       <CardHeader className="border-b border-border/40">
@@ -211,6 +231,7 @@ export function UserManagementTable() {
               <TableHead>Role</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Verified</TableHead>
+              <TableHead>Deleted</TableHead>
               <TableHead>Created</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
@@ -241,7 +262,7 @@ export function UserManagementTable() {
                 </TableCell>
               </TableRow>
             ) : (
-              paginatedUsers.map((user, index) => (
+              paginatedUsers.map((user: IUser, index: number) => (
                 <TableRow
                   key={user._id}
                   className={index === paginatedUsers.length - 1 ? "border-0" : "border-b border-border/20"}
@@ -265,6 +286,19 @@ export function UserManagementTable() {
                       </Badge>
                     )}
                   </TableCell>
+                  <TableCell>
+                    {user.isDeleted ? (
+                      <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
+                        <Trash2 className="w-3 h-3 mr-1" />
+                        Deleted
+                      </Badge>
+                    ) : (
+                      <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                        <UserCheck className="w-3 h-3 mr-1" />
+                        Active
+                      </Badge>
+                    )}
+                  </TableCell>
                   <TableCell className="text-sm text-muted-foreground">{formatDate(user.createdAt)}</TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>
@@ -275,53 +309,66 @@ export function UserManagementTable() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem
-                          onClick={() => handleStatusChange(user._id, "ACTIVE")}
-                          disabled={user.isActive === "ACTIVE"}
-                        >
-                          Set Active
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => handleStatusChange(user._id, "INACTIVE")}
-                          disabled={user.isActive === "INACTIVE"}
-                        >
-                          Set Inactive
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => handleStatusChange(user._id, "BLOCKED")}
-                          disabled={user.isActive === "BLOCKED"}
-                        >
-                          Block User
-                        </DropdownMenuItem>
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <DropdownMenuItem
-                              onSelect={(e) => e.preventDefault()}
-                              className="text-destructive focus:text-destructive"
-                            >
-                              <Trash2 className="w-4 h-4 mr-2" />
-                              Delete User
-                            </DropdownMenuItem>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                              <AlertDialogDescription>
-                                This action cannot be undone. This will permanently delete the user "{user.firstName}{" "}
-                                {user.lastName}" and remove their data from the system.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction
-                                onClick={() => handleDeleteUser(user._id)}
-                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                              >
-                                Delete
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
+                        <ConfirmationDialog
+                          trigger="Set Active"
+                          title="Activate User"
+                          description={`Are you sure you want to activate user "${user.firstName} ${user.lastName}"? This will allow them to access their account and perform transactions.`}
+                          confirmText="Activate User"
+                          onConfirm={() => handleStatusChange(user._id, USER_STATUS.ACTIVE)}
+                          confirmButtonClassName="bg-green-600 text-white hover:bg-green-700"
+                          disabled={user.isActive === USER_STATUS.ACTIVE}
+                          isLoading={updateUserLoading}
+                        />
+
+                        <ConfirmationDialog
+                          trigger="Set Inactive"
+                          title="Deactivate User"
+                          description={`Are you sure you want to deactivate user "${user.firstName} ${user.lastName}"? This will prevent them from accessing their account until reactivated.`}
+                          confirmText="Deactivate User"
+                          onConfirm={() => handleStatusChange(user._id, USER_STATUS.INACTIVE)}
+                          confirmButtonClassName="bg-yellow-600 text-white hover:bg-yellow-700"
+                          disabled={user.isActive === USER_STATUS.INACTIVE}
+                          isLoading={updateUserLoading}
+                        />
+
+                        <ConfirmationDialog
+                          trigger="Block User"
+                          title="Block User"
+                          description={`Are you sure you want to block user "${user.firstName} ${user.lastName}"? This will permanently restrict their access and freeze all account activities.`}
+                          confirmText="Block User"
+                          onConfirm={() => handleStatusChange(user._id, USER_STATUS.BLOCKED)}
+                          confirmButtonClassName="bg-red-600 text-white hover:bg-red-700"
+                          disabled={user.isActive === USER_STATUS.BLOCKED}
+                          isLoading={updateUserLoading}
+                        />
+
+                        <ConfirmationDialog
+                          trigger={
+                            user.isDeleted ? (
+                              <p className="text-primary"> Recover User</p>
+                            ) : (
+                              <>
+                                <Trash2 className="w-4 h-4 mr-2" />
+                                Delete User
+                              </>
+                            )
+                          }
+                          title="Are you sure?"
+                          description={`This action cannot be undone. This will permanently ${
+                            user.isDeleted ? "recover" : "delete"
+                          } the user "${user.firstName} ${user.lastName}" ${
+                            user.isDeleted ? "and restore their access to" : "and remove their data from"
+                          } the system.`}
+                          confirmText={user.isDeleted ? "Recover" : "Delete"}
+                          onConfirm={() => handleDeleteUser(user._id, user.isDeleted)}
+                          confirmButtonClassName={
+                            user.isDeleted
+                              ? "bg-green-600 text-white hover:bg-green-700"
+                              : "bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                          }
+                          triggerClassName="text-destructive focus:text-destructive"
+                          isLoading={updateUserLoading}
+                        />
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
@@ -331,6 +378,7 @@ export function UserManagementTable() {
           </TableBody>
         </Table>
 
+        {/* Pagination  */}
         {
           <div className="flex items-center justify-between px-6 py-4 border-t border-border/40">
             <div className="text-sm text-muted-foreground">
