@@ -16,13 +16,25 @@ import {
 } from "@/components/ui/sidebar";
 import { AdminSidebarItems } from "@/routes/AdminSidebarItems";
 import type { ISidebarItem } from "@/types";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { Button } from "./ui/button";
+import { useLogoutMutation } from "@/redux/features/auth/auth.api";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const [logout] = useLogoutMutation();
+  const navigate = useNavigate();
+  const handleLogout = async () => {
+    // remove user session form cookie
+    document.cookie = "user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    // console.log("User logged out");
+    await logout({}).unwrap();
+    navigate("/login");
+  };
+
   return (
     <Sidebar {...props}>
-      <SidebarContent>
-        <SidebarGroup>
+      <SidebarContent className="flex flex-col h-full">
+        <SidebarGroup className="flex-1">
           <SidebarGroupLabel>Admin Panel</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -31,6 +43,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <Button onClick={handleLogout} variant={"destructive"} className="cursor-pointer">
+            Logout
+          </Button>
         </SidebarGroup>
       </SidebarContent>
       <SidebarRail />
