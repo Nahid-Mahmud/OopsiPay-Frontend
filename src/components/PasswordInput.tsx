@@ -7,11 +7,15 @@ import type { UseFormReturn, FieldValues, Path } from "react-hook-form";
 type PasswordInputProps<T extends FieldValues> = {
   form: UseFormReturn<T>;
   name?: Path<T>;
+  label?: string;
+  placeholder?: string;
 };
 
 export default function PasswordInput<T extends FieldValues>({
   form,
   name = "password" as Path<T>,
+  label = "Password",
+  placeholder = "Enter password",
 }: PasswordInputProps<T>) {
   const [showPassword, setShowPassword] = useState(false);
   return (
@@ -21,20 +25,26 @@ export default function PasswordInput<T extends FieldValues>({
       render={({ field }) => (
         <FormItem>
           <div className="flex justify-between">
-            <FormLabel>Password</FormLabel>{" "}
+            <FormLabel>{label}</FormLabel>
           </div>
           <FormControl>
             <div className="relative">
-              <Input type={showPassword ? "text" : "password"} autoComplete="new-password" required {...field} />
+              <Input
+                type={showPassword ? "text" : "password"}
+                autoComplete="new-password"
+                placeholder={placeholder}
+                required
+                {...field}
+              />
               <div
                 className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
                 onClick={() => setShowPassword((prev) => !prev)}
               >
-                {showPassword ? <Eye /> : <EyeClosed />}
+                {showPassword ? <Eye className="h-4 w-4" /> : <EyeClosed className="h-4 w-4" />}
               </div>
             </div>
           </FormControl>
-          <FormDescription className="sr-only">This is your public display Password.</FormDescription>
+          <FormDescription className="sr-only">This is your password field.</FormDescription>
           <FormMessage />
         </FormItem>
       )}
