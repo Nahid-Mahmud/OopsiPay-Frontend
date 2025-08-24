@@ -1,12 +1,16 @@
-import Profile from "@/components/Profile";
-import WalletPage from "@/components/Wallet";
+import ChangePassword from "@/components/ChangePassword";
+import { ChangePinPage } from "@/components/ChangePin";
+import MyTransactions from "@/components/MyTransactions";
+import MyWallet from "@/components/MyWallet";
+import { Profile } from "@/components/Profile";
+
 import AllAgents from "@/pages/admin/AllAgents";
 import AllTransactions from "@/pages/admin/AllTransactions";
 import AllUsersPage from "@/pages/admin/AllUsers";
 import AllWallets from "@/pages/admin/AllWallets";
 import Analytics from "@/pages/admin/Analytics";
 import type { ISidebarItem } from "@/types";
-import { ArrowLeftRight, ChartLine, HatGlasses, Settings, Users, Wallet } from "lucide-react";
+import { ArrowLeftRight, ChartLine, HatGlasses, Lock, Settings, Users, Wallet } from "lucide-react";
 
 export const AdminSidebarItems: ISidebarItem[] = [
   {
@@ -28,8 +32,20 @@ export const AdminSidebarItems: ISidebarItem[] = [
       {
         title: "Wallet",
         url: "/admin/wallet",
-        Component: WalletPage,
+        Component: MyWallet,
         icon: <Wallet />,
+      },
+    ],
+  },
+  {
+    title: "My Transactions",
+    url: "/admin/transactions",
+    items: [
+      {
+        title: "All Transactions",
+        url: "/admin/my-transactions",
+        Component: MyTransactions,
+        icon: <ArrowLeftRight />,
       },
     ],
   },
@@ -84,6 +100,18 @@ export const AdminSidebarItems: ISidebarItem[] = [
         url: "/admin/settings/profile",
         Component: Profile,
         icon: <Settings />,
+      },
+      {
+        title: "Password",
+        url: "/admin/settings/password",
+        Component: ChangePassword,
+        icon: <Lock />,
+      },
+      {
+        title: "PIN",
+        url: "/admin/settings/pin",
+        Component: ChangePinPage,
+        icon: <Lock />,
       },
     ],
   },
