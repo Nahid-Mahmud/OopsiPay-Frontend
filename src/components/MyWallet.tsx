@@ -1,10 +1,9 @@
 import { useGetMyWalletQuery } from "@/redux/features/wallet/wallet.api";
+import { useState } from "react";
 import TransferForm from "./kokonutui/TransferForm";
 import CreditCard from "./modules/Wallet/CreditCard";
 import PaymentOptions from "./modules/Wallet/PaymentOptions";
 import { Skeleton } from "./ui/skeleton";
-import { useState } from "react";
-import type { TransferFormData } from "@/validations/transfer.zod.validation";
 
 type PaymentType = "CASH_IN" | "CASH_OUT" | "SEND_MONEY" | "ADMIN_CREDIT";
 
@@ -31,17 +30,17 @@ export default function MyWallet() {
     setIsTransferFormOpen(true);
   };
 
-  const handleTransfer = async (data: TransferFormData) => {
-    console.log("Transfer data:", data);
+  // const handleTransfer = async (data: TransferFormData) => {
+  //   console.log("Transfer data:", data);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+  //   // Simulate API call
+  //   await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    // Here you would typically call your transfer API
-    // Example:
-    // const response = await transferAPI.createTransaction(data);
-    // if (!response.success) throw new Error(response.message);
-  };
+  //   // Here you would typically call your transfer API
+  //   // Example:
+  //   // const response = await transferAPI.createTransaction(data);
+  //   // if (!response.success) throw new Error(response.message);
+  // };
 
   const getTransferFormTitle = (type: PaymentType) => {
     switch (type) {
@@ -141,7 +140,7 @@ export default function MyWallet() {
         transactionType={selectedTransactionType}
         isOpen={isTransferFormOpen}
         onOpenChange={setIsTransferFormOpen}
-        onTransfer={handleTransfer}
+        // onTransfer={handleTransfer}
         showTrigger={false}
       />
     </div>
