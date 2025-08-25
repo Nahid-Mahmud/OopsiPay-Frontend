@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { Eye, EyeOff, Wifi } from "lucide-react";
+import { Eye, EyeOff, Wifi, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 interface CreditCardProps {
   cardNumber?: string;
@@ -20,6 +21,7 @@ const CreditCard = ({
 }: CreditCardProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
+  const [isCopied, setIsCopied] = useState(false);
 
   const toggleVisibility = () => {
     if (timeoutId) {
@@ -36,6 +38,22 @@ const CreditCard = ({
       setTimeoutId(id);
     } else {
       setIsVisible(false);
+    }
+  };
+
+  const copyCardNumber = async () => {
+    try {
+      await navigator.clipboard.writeText(cardNumber.replace(/\s/g, ""));
+      setIsCopied(true);
+      toast.success("Card number copied to clipboard!");
+
+      // Reset the copied state after 2 seconds
+      setTimeout(() => {
+        setIsCopied(false);
+      }, 2000);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (err) {
+      toast.error("Could not copy to clipboard");
     }
   };
 
@@ -114,13 +132,28 @@ const CreditCard = ({
             </div>
           </div>
 
-          <div
-            className={cn(
-              "font-mono text-lg tracking-widest transition-all duration-300",
-              isVisible ? "blur-none" : "blur-sm"
-            )}
-          >
-            {formatCardNumber(cardNumber, isVisible)}
+          <div className="flex items-center justify-between">
+            <div
+              className={cn(
+                "font-mono text-lg tracking-widest transition-all duration-300 flex-1",
+                isVisible ? "blur-none" : "blur-sm"
+              )}
+            >
+              {formatCardNumber(cardNumber, isVisible)}
+            </div>
+            <Button
+              variant="ghost"
+              title="Copy card number"
+              size="icon"
+              onClick={copyCardNumber}
+              className={cn(
+                "h-5 w-5 rounded-full bg-white/10 hover:bg-white/20",
+                "border border-white/20 transition-all duration-200 ml-2",
+                "opacity-80 hover:opacity-100"
+              )}
+            >
+              {isCopied ? <Check className="h-4 w-4 text-green-400" /> : <Copy className="h-4 w-4" />}
+            </Button>
           </div>
         </div>
 

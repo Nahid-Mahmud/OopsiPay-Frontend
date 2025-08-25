@@ -85,7 +85,7 @@ export default function MyWallet() {
 
   return (
     <div className="space-y-6 p-4 max-w-xl mx-auto">
-      <h1 className="text-lg">This is Wallet component</h1>
+      <h1 className="text-lg">My Wallet</h1>
 
       {isLoading ? (
         // Skeleton for credit card
