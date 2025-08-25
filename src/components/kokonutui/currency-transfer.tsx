@@ -1,15 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-/**
- * @author: @dorian_baffier
- * @description: Currency Transfer
- * @version: 1.0.0
- * @date: 2025-06-26
- * @license: MIT
- * @website: https://kokonutui.com
- * @github: https://github.com/kokonut-labs/kokonutui
- */
-
 import { motion, AnimatePresence } from "motion/react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowUpIcon, ArrowDownIcon, InfoIcon, ArrowUpDown, Check, X } from "lucide-react";
@@ -91,6 +81,7 @@ interface CurrencyTransferProps {
   toWallet: string;
   loadingTransfer: boolean;
   hasError?: boolean;
+  transactionId?: string;
 }
 
 export default function CurrencyTransfer({
@@ -100,10 +91,12 @@ export default function CurrencyTransfer({
   toWallet,
   loadingTransfer,
   hasError = false,
+  transactionId,
 }: CurrencyTransferProps) {
   const [isCompleted, setIsCompleted] = useState(false);
   const timestamp = new Date().toLocaleString();
-  const transactionId = `TXN-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+  // Use provided transactionId or generate a fallback
+  const displayTransactionId = transactionId || `TXN-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
 
   useEffect(() => {
     // Only set completed when not loading and no error
@@ -296,7 +289,21 @@ export default function CurrencyTransfer({
                 )}
               </AnimatePresence>
               <AnimatePresence mode="wait">
-                {isCompleted ? (
+                {hasError ? (
+                  <motion.div
+                    key="error-message"
+                    className="text-xs text-red-500 dark:text-red-400 font-medium"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{
+                      duration: 0.4,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                  >
+                    Transfer failed. Please try again.
+                  </motion.div>
+                ) : isCompleted ? (
                   <motion.div
                     key="completed-id"
                     className="text-xs text-emerald-600 dark:text-emerald-400 font-medium"
@@ -308,7 +315,7 @@ export default function CurrencyTransfer({
                       ease: [0.22, 1, 0.36, 1],
                     }}
                   >
-                    Transaction ID: {transactionId}
+                    Transaction ID: {displayTransactionId}
                   </motion.div>
                 ) : (
                   <motion.div
@@ -395,7 +402,7 @@ export default function CurrencyTransfer({
                                 damping: 10,
                               }}
                             >
-                              $
+                              ৳
                             </motion.span>
                             <div className="flex flex-col items-start">
                               <AnimatePresence mode="wait">
@@ -416,7 +423,7 @@ export default function CurrencyTransfer({
                                     ease: [0.22, 1, 0.36, 1],
                                   }}
                                 >
-                                  500.00 USD
+                                  ৳{amount.toFixed(2)}
                                 </motion.span>
                               </AnimatePresence>
                               <motion.span
@@ -432,7 +439,7 @@ export default function CurrencyTransfer({
                                   ease: [0.22, 1, 0.36, 1],
                                 }}
                               >
-                                Chase Bank ••••4589
+                                {fromWallet}
                               </motion.span>
                             </div>
                           </motion.div>
@@ -488,7 +495,7 @@ export default function CurrencyTransfer({
                                 damping: 10,
                               }}
                             >
-                              €
+                              ৳
                             </motion.span>
                             <div className="flex flex-col items-start">
                               <AnimatePresence mode="wait">
@@ -509,7 +516,7 @@ export default function CurrencyTransfer({
                                     ease: [0.22, 1, 0.36, 1],
                                   }}
                                 >
-                                  460.00 EUR
+                                  ৳{amount.toFixed(2)}
                                 </motion.span>
                               </AnimatePresence>
                               <motion.span
@@ -525,7 +532,7 @@ export default function CurrencyTransfer({
                                   ease: [0.22, 1, 0.36, 1],
                                 }}
                               >
-                                Deutsche Bank ••••7823
+                                {toWallet}
                               </motion.span>
                             </div>
                           </motion.div>
@@ -557,7 +564,14 @@ export default function CurrencyTransfer({
                         ease: [0.22, 1, 0.36, 1],
                       }}
                     >
-                      Exchange Rate: 1 USD = 0.92 EUR
+                      {transactionType === "SEND_MONEY"
+                        ? "Money Transfer"
+                        : transactionType === "CASH_IN"
+                        ? "Cash In"
+                        : transactionType === "CASH_OUT"
+                        ? "Cash Out"
+                        : "Admin Credit"}{" "}
+                      Completed
                     </motion.span>
                   ) : (
                     <motion.span
@@ -570,7 +584,7 @@ export default function CurrencyTransfer({
                         ease: [0.22, 1, 0.36, 1],
                       }}
                     >
-                      Calculating exchange rate...
+                      Processing {transactionType.toLowerCase().replace("_", " ")}...
                     </motion.span>
                   )}
                 </AnimatePresence>
@@ -579,7 +593,9 @@ export default function CurrencyTransfer({
                     <InfoIcon className="w-3 h-3 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors" />
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p className="text-xs">{isCompleted ? `Rate updated at ${timestamp}` : "Please wait..."}</p>
+                    <p className="text-xs">
+                      {isCompleted ? `Transaction completed at ${timestamp}` : "Processing transaction..."}
+                    </p>
                   </TooltipContent>
                 </Tooltip>
               </motion.div>
