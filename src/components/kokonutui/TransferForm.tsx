@@ -19,9 +19,13 @@ import { transferValidationSchema, type TransferFormData } from "@/validations/t
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Send, X } from "lucide-react";
 import { motion } from "motion/react";
-import * as React from "react";
+
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import CurrencyTransfer from "./currency-transfer";
+import { useCreateTransactionMutation } from "@/redux/features/transaction/transaction.api";
+import { useGetWalletNumberQuery } from "@/redux/features/wallet/wallet.api";
+import { useEffect, useState } from "react";
 
 interface TransferFormProps extends React.HTMLAttributes<HTMLDivElement> {
   title?: string;
@@ -85,18 +89,53 @@ const itemVariants = {
 export default function TransferForm({
   title = "Send Money",
   description = "Transfer funds to another wallet securely and instantly.",
-  onTransfer,
+  // onTransfer,
   triggerText = "Send Money",
   isOpen: externalIsOpen,
   onOpenChange: externalOnOpenChange,
   transactionType = "SEND_MONEY",
   showTrigger = true,
 }: TransferFormProps) {
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [internalIsOpen, setInternalIsOpen] = React.useState(false);
-  const [showTransferProgress, setShowTransferProgress] = React.useState(false);
-  const [transferData, setTransferData] = React.useState<TransferFormData | null>(null);
-  const [hasError, setHasError] = React.useState(false);
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
+  const [showTransferProgress, setShowTransferProgress] = useState(false);
+  const [transferData, setTransferData] = useState<TransferFormData | null>(null);
+  const [transactionId, setTransactionId] = useState<string>("");
+  const [walletNumber, setWalletNumber] = useState<string>("");
+  const [createTransaction, { isLoading, isError }] = useCreateTransactionMutation();
+
+  // Only fetch wallet data when we have a 13-digit wallet number
+  const {
+    data: walletData,
+    isLoading: isWalletLoading,
+    isError: isWalletError,
+  } = useGetWalletNumberQuery(walletNumber, {
+    skip: walletNumber.length !== 13,
+    refetchOnMountOrArgChange: true,
+  });
+
+  // Helper function to validate wallet type based on transaction type
+  const isValidWalletType = (walletType: string, transactionType: string) => {
+    switch (transactionType) {
+      case "SEND_MONEY":
+        return walletType === "USER";
+      case "CASH_IN":
+        return walletType === "USER";
+      case "CASH_OUT":
+        return walletType === "MERCHANT";
+      case "ADMIN_CREDIT":
+        return walletType === "MERCHANT";
+      default:
+        return false;
+    }
+  };
+
+  const isWalletValid = walletData?.data ? isValidWalletType(walletData.data.walletType, transactionType) : false;
+
+  useEffect(() => {
+    if (walletNumber.length < 13) {
+      // Clear any existing wallet data display when number is incomplete
+    }
+  }, [walletNumber]);
 
   // Use external control if provided, otherwise use internal state
   const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
@@ -114,13 +153,38 @@ export default function TransferForm({
   });
 
   // Update form when transactionType prop changes
-  React.useEffect(() => {
+  useEffect(() => {
     form.setValue("transactionType", transactionType);
   }, [transactionType, form]);
 
   const onSubmit = async (values: TransferFormData) => {
-    setIsLoading(true);
-    setHasError(false);
+    // Additional validation for wallet existence and type
+    if (values.walletNumber.length === 13) {
+      if (isWalletError || !walletData?.data) {
+        toast.error("Please enter a valid wallet number");
+        return;
+      }
+
+      if (!isWalletValid) {
+        let expectedType = "";
+        switch (values.transactionType) {
+          case "SEND_MONEY":
+          case "CASH_IN":
+            expectedType = "USER";
+            break;
+          case "CASH_OUT":
+          case "ADMIN_CREDIT":
+            expectedType = "MERCHANT";
+            break;
+        }
+        toast.error(
+          `Invalid wallet type. Expected ${expectedType} wallet for ${values.transactionType
+            .toLowerCase()
+            .replace("_", " ")}`
+        );
+        return;
+      }
+    }
 
     // Immediately close the form and show progress modal
     setIsOpen(false);
@@ -128,24 +192,24 @@ export default function TransferForm({
     setShowTransferProgress(true);
 
     try {
-      // Simulate the transfer process with the progress modal visible
-      await new Promise((resolve) => setTimeout(resolve, 3000)); // 3 seconds to show the animation
+      // Call the API
+      const res = await createTransaction(values).unwrap();
+      console.log(res);
+      console.log("Transaction successful:", res);
 
-      // Simulate random error for demo (remove this in production)
-      if (Math.random() > 0.7) {
-        throw new Error("Transfer failed due to insufficient funds");
+      // Store the transaction ID from the response
+      if (res?.data?.transactionId) {
+        setTransactionId(res.data.transactionId);
+        // clear the form
+
+        form.reset();
       }
-
-      if (onTransfer) {
-        await onTransfer(values);
-      }
-
-      // Stop loading but keep modal open for user to close manually
-      setIsLoading(false);
     } catch (error: any) {
-      setIsLoading(false);
-      setHasError(true);
-      console.log(error);
+      const errorMsg = error?.data?.message || error?.message || "Transaction failed. Please try again.";
+      console.log("Transaction failed:", errorMsg);
+
+      // Show error toast
+      toast.error(errorMsg);
     }
   };
 
@@ -153,9 +217,10 @@ export default function TransferForm({
   const handleModalClose = (open: boolean) => {
     setShowTransferProgress(open);
 
-    // If modal is being closed, reset the form and error state
+    // If modal is being closed, reset the form and transaction ID
     if (!open) {
-      setHasError(false);
+      setTransactionId("");
+      setWalletNumber("");
       form.reset({
         walletNumber: "",
         amount: 50,
@@ -213,8 +278,61 @@ export default function TransferForm({
                           {transactionType === "SEND_MONEY" ? "Recipient Wallet Number" : "Destination Wallet Number"}
                         </FormLabel>
                         <FormControl>
-                          <Input placeholder="Enter wallet number" {...field} disabled={isLoading} />
+                          <Input
+                            placeholder="Enter 13-digit wallet number"
+                            {...field}
+                            disabled={isLoading}
+                            maxLength={13}
+                            onChange={(e) => {
+                              // Only allow numeric input
+                              const value = e.target.value.replace(/\D/g, "");
+                              field.onChange(value);
+                              setWalletNumber(value);
+                            }}
+                          />
                         </FormControl>
+
+                        {/* Display wallet owner info */}
+                        {walletNumber.length === 13 && (
+                          <div className="mt-2">
+                            {isWalletLoading && (
+                              <div className="flex items-center gap-2 text-sm text-blue-600">
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                                Verifying wallet...
+                              </div>
+                            )}
+
+                            {!isWalletLoading && !isWalletError && walletData?.data && isWalletValid && (
+                              <div className="flex items-center gap-2 text-sm text-green-600">
+                                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                                {walletData.data.user.firstName} {walletData.data.user.lastName}
+                                <span className="text-xs text-gray-500">({walletData.data.walletType})</span>
+                              </div>
+                            )}
+
+                            {!isWalletLoading && !isWalletError && walletData?.data && !isWalletValid && (
+                              <div className="flex items-center gap-2 text-sm text-orange-600">
+                                <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                                Invalid wallet type for {transactionType.toLowerCase().replace("_", " ")}
+                                <span className="text-xs text-gray-500">
+                                  (Expected:{" "}
+                                  {transactionType === "SEND_MONEY" || transactionType === "CASH_IN"
+                                    ? "USER"
+                                    : "MERCHANT"}
+                                  )
+                                </span>
+                              </div>
+                            )}
+
+                            {!isWalletLoading && (isWalletError || !walletData?.data) && (
+                              <div className="flex items-center gap-2 text-sm text-red-600">
+                                <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                                Wallet not found
+                              </div>
+                            )}
+                          </div>
+                        )}
+
                         <FormMessage />
                       </FormItem>
                     )}
@@ -303,7 +421,10 @@ export default function TransferForm({
                 <DrawerFooter className="flex flex-col gap-3 px-0">
                   <Button
                     type="submit"
-                    disabled={isLoading}
+                    disabled={
+                      isLoading ||
+                      (walletNumber.length === 13 && (isWalletError || !walletData?.data || !isWalletValid))
+                    }
                     className="w-full h-11 rounded-xl cursor-pointer text-white font-semibold tracking-wide shadow-lg transition-all duration-300"
                   >
                     {isLoading ? (
@@ -371,11 +492,18 @@ export default function TransferForm({
                   : transferData.transactionType === "CASH_OUT"
                   ? "Bank Account"
                   : transferData.transactionType === "SEND_MONEY"
-                  ? `Wallet ${transferData.walletNumber}`
+                  ? walletData?.data && isWalletValid
+                    ? `${walletData.data.user.firstName} ${walletData.data.user.lastName} (${transferData.walletNumber})`
+                    : `Wallet ${transferData.walletNumber}`
+                  : transferData.transactionType === "ADMIN_CREDIT"
+                  ? walletData?.data && isWalletValid
+                    ? `${walletData.data.user.firstName} ${walletData.data.user.lastName} (${transferData.walletNumber})`
+                    : `Wallet ${transferData.walletNumber}`
                   : "Target Account"
               }
               loadingTransfer={isLoading}
-              hasError={hasError}
+              hasError={isError}
+              transactionId={transactionId}
             />
           )}
         </DialogContent>
