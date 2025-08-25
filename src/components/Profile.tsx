@@ -62,16 +62,16 @@ export function Profile() {
         return;
       }
 
+      // Validate file size (2MB limit)
+      if (file.size > 2 * 1024 * 1024) {
+        toast.error("File size must be less than 2MB");
+        return;
+      }
+
       formdata.append("file", file);
 
       if (userData.profilePicture) {
         formdata.append("deleteImages[]", userData.profilePicture);
-      }
-
-      // Validate file size (5MB limit)
-      if (file.size > 5 * 1024 * 1024) {
-        toast.error("File size must be less than 5MB");
-        return;
       }
 
       try {

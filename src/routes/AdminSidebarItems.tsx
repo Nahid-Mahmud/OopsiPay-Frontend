@@ -9,6 +9,7 @@
 // import AllUsersPage from "@/pages/admin/AllUsers";
 // import AllWallets from "@/pages/admin/AllWallets";
 
+import MyWallet from "@/components/MyWallet";
 import type { ISidebarItem } from "@/types";
 import { ArrowLeftRight, ChartLine, HatGlasses, Lock, Settings, Users, Wallet } from "lucide-react";
 import { lazy } from "react";
@@ -19,7 +20,7 @@ const ChangePinPage = lazy(() =>
   import("@/components/ChangePin").then((module) => ({ default: module.ChangePinPage }))
 );
 const MyTransactions = lazy(() => import("@/components/MyTransactions"));
-const MyWallet = lazy(() => import("@/components/MyWallet"));
+// const MyWallet = lazy(() => import("@/components/MyWallet"));
 const Profile = lazy(() => import("@/components/Profile").then((module) => ({ default: module.Profile })));
 const AllAgents = lazy(() => import("@/pages/admin/AllAgents"));
 const AllTransactions = lazy(() => import("@/pages/admin/AllTransactions"));

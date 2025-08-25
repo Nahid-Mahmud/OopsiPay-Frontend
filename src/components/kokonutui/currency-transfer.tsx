@@ -12,7 +12,7 @@
 
 import { motion, AnimatePresence } from "motion/react";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowUpIcon, ArrowDownIcon, InfoIcon, ArrowUpDown, Check } from "lucide-react";
+import { ArrowUpIcon, ArrowDownIcon, InfoIcon, ArrowUpDown, Check, X } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
@@ -84,18 +84,40 @@ export function Checkmark({ size = 100, strokeWidth = 2, color = "currentColor",
   );
 }
 
-export default function CurrencyTransfer() {
+interface CurrencyTransferProps {
+  transactionType: "CASH_IN" | "CASH_OUT" | "SEND_MONEY" | "ADMIN_CREDIT";
+  amount: number;
+  fromWallet: string;
+  toWallet: string;
+  loadingTransfer: boolean;
+  hasError?: boolean;
+}
+
+export default function CurrencyTransfer({
+  transactionType,
+  amount,
+  fromWallet,
+  toWallet,
+  loadingTransfer,
+  hasError = false,
+}: CurrencyTransferProps) {
   const [isCompleted, setIsCompleted] = useState(false);
   const timestamp = new Date().toLocaleString();
   const transactionId = `TXN-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsCompleted(true);
-    }, 1500);
-
-    return () => clearTimeout(timer);
-  }, []);
+    // Only set completed when not loading and no error
+    if (!loadingTransfer && !hasError) {
+      const timer = setTimeout(() => {
+        setIsCompleted(true);
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+    // Reset completed state when loading or error occurs
+    else {
+      setIsCompleted(false);
+    }
+  }, [loadingTransfer, hasError]);
 
   return (
     <TooltipProvider>
@@ -125,7 +147,7 @@ export default function CurrencyTransfer() {
                   }}
                 />
                 <AnimatePresence mode="wait">
-                  {!isCompleted ? (
+                  {loadingTransfer && !hasError ? (
                     <motion.div
                       key="progress"
                       initial={{ opacity: 0 }}
@@ -170,6 +192,27 @@ export default function CurrencyTransfer() {
                         </div>
                       </div>
                     </motion.div>
+                  ) : hasError ? (
+                    <motion.div
+                      key="error"
+                      initial={{
+                        opacity: 0,
+                        rotate: -180,
+                      }}
+                      animate={{
+                        opacity: 1,
+                        rotate: 0,
+                      }}
+                      transition={{
+                        duration: 0.6,
+                        ease: "easeInOut",
+                      }}
+                      className="w-[100px] h-[100px] flex items-center justify-center"
+                    >
+                      <div className="relative z-10 bg-white dark:bg-zinc-900 rounded-full p-5 border border-red-500">
+                        <X className="h-10 w-10 text-red-500" strokeWidth={3.5} />
+                      </div>
+                    </motion.div>
                   ) : (
                     <motion.div
                       key="completed"
@@ -208,7 +251,21 @@ export default function CurrencyTransfer() {
               }}
             >
               <AnimatePresence mode="wait">
-                {isCompleted ? (
+                {hasError ? (
+                  <motion.h2
+                    key="error-title"
+                    className="text-lg text-red-500 dark:text-red-400 tracking-tighter font-semibold uppercase"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{
+                      duration: 0.5,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                  >
+                    Transfer Failed
+                  </motion.h2>
+                ) : isCompleted ? (
                   <motion.h2
                     key="completed-title"
                     className="text-lg text-zinc-900 dark:text-zinc-100 tracking-tighter font-semibold uppercase"

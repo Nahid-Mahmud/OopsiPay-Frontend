@@ -19,6 +19,14 @@ export const walletApi = baseApi.injectEndpoints({
       providesTags: ["Wallet"],
     }),
 
+    getMyWallet: builder.query<TResponse<IWallet>, void>({
+      query: () => ({
+        url: "/wallet/me",
+        method: "GET",
+      }),
+      providesTags: ["Wallet"],
+    }),
+
     updateWalletStatus: builder.mutation<
       TResponse<IWallet>,
       {
@@ -38,4 +46,4 @@ export const walletApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetAllWalletQuery, useUpdateWalletStatusMutation } = walletApi;
+export const { useGetAllWalletQuery, useGetMyWalletQuery, useUpdateWalletStatusMutation } = walletApi;
