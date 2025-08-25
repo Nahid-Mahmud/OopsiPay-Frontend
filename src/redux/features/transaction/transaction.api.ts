@@ -24,7 +24,21 @@ export const transactionApi = baseApi.injectEndpoints({
       }),
       providesTags: ["Transaction"],
     }),
+
+    createTransaction: builder.mutation({
+      query: (data: {
+        walletNumber: string;
+        amount: number;
+        transactionType: "CASH_IN" | "CASH_OUT" | "SEND_MONEY" | "ADMIN_CREDIT";
+        pin: string;
+      }) => ({
+        url: "/transaction/create",
+        method: "POST",
+        data: data,
+      }),
+      invalidatesTags: ["Transaction", "Wallet"],
+    }),
   }),
 });
 
-export const { useGetAllTransactionsQuery, useGetMyTransactionsQuery } = transactionApi;
+export const { useGetAllTransactionsQuery, useGetMyTransactionsQuery, useCreateTransactionMutation } = transactionApi;
