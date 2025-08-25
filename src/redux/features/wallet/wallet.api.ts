@@ -43,7 +43,17 @@ export const walletApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Wallet"],
     }),
+
+    getWalletNumber: builder.query({
+      query: (number: string) => ({
+        url: `/wallet/wallet-number/${number}`,
+        method: "GET",
+      }),
+      providesTags: (_, error, number) => (error ? [] : [{ type: "Wallet", id: `number-${number}` }]),
+      keepUnusedDataFor: 0,
+    }),
   }),
 });
 
-export const { useGetAllWalletQuery, useGetMyWalletQuery, useUpdateWalletStatusMutation } = walletApi;
+export const { useGetAllWalletQuery, useGetMyWalletQuery, useUpdateWalletStatusMutation, useGetWalletNumberQuery } =
+  walletApi;
