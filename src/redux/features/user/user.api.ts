@@ -44,6 +44,7 @@ export const userApi = baseApi.injectEndpoints({
         method: "PATCH",
         data: data,
       }),
+      invalidatesTags: ["User"],
     }),
 
     setPin: builder.mutation<TResponse<null>, { pin: string }>({
@@ -52,6 +53,7 @@ export const userApi = baseApi.injectEndpoints({
         method: "PATCH",
         data: data,
       }),
+      invalidatesTags: ["User"],
     }),
   }),
 });

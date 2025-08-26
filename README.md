@@ -6,6 +6,33 @@ Here's a refined version of the `README.md` for the OopsiPay frontend applicatio
 
 A comprehensive guide for developers working on the OopsiPay frontend, built with **React**, **TypeScript**, and **Vite**. This document covers setup, architecture, development workflows, testing, linting, deployment, troubleshooting, and contribution guidelines.
 
+## Demo user accounts
+
+Admin:
+email: admin@gmaill.com
+password: Pa$$w0rd!34
+pin: 12345
+Wallet Number : 1788386818549
+
+User1:
+email: kamla@oletters.com
+password: passwordA1@
+pin: 12345
+Wallet Number: 5294780550752
+
+user2 :
+email: user99@oletters.com
+password: Pa$$w0rd!34
+pin: 12345
+Wallet Number: 4924478916704
+
+
+agent:
+email: agent1@oletters.com
+password: passwordA1@
+pin: 12345
+Wallet Number: 8741495266472
+
 ## Quickstart
 
 ### Prerequisites
