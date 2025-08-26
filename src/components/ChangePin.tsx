@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
 
-export function ChangePinPage() {
+export default function ChangePinPage() {
   const [changePin, { isLoading: isChanging }] = useChangePinMutation();
   const [setPin, { isLoading: isSetting }] = useSetPinMutation();
   const { data: userInfo, isLoading: isLoadingUserInfo } = useUserInfoQuery();
@@ -49,6 +49,7 @@ export function ChangePinPage() {
         changePinForm.reset();
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error("Change PIN error:", error);
       toast.error("Failed to change PIN. Please try again.");
     }
@@ -65,6 +66,7 @@ export function ChangePinPage() {
         setPinForm.reset();
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error("Set PIN error:", error);
       toast.error("Failed to set PIN. Please try again.");
     }
@@ -231,7 +233,8 @@ export function ChangePinPage() {
               Set Your Security PIN
             </CardTitle>
             <CardDescription className="text-base">
-              You haven't set a PIN yet. Create a secure PIN to protect your transactions. Your PIN should be at least 5 digits long.
+              You haven't set a PIN yet. Create a secure PIN to protect your transactions. Your PIN should be at least 5
+              digits long.
             </CardDescription>
           </CardHeader>
           <CardContent>
