@@ -46,8 +46,6 @@ axiosInstance.interceptors.response.use(
       error.response.data.message === "Token has expired" &&
       !originalRequest._retry
     ) {
-      console.log("Token has expired");
-
       originalRequest._retry = true;
 
       if (isRefreshing) {
@@ -67,7 +65,8 @@ axiosInstance.interceptors.response.use(
 
         return axiosInstance(originalRequest);
       } catch (error) {
-        console.log(error);
+        // eslint-disable-next-line no-console
+        console.error("Error refreshing token:", error);
         processQQueue(error);
         return Promise.reject(error);
       } finally {
