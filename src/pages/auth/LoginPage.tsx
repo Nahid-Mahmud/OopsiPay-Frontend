@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { USER_ROLES } from "@/constants/user.constants";
 import { useLoginMutation } from "@/redux/features/auth/auth.api";
 import { loginUserValidationSchema } from "@/validations/auth.zod.validation";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,6 +23,21 @@ export default function LoginPage() {
     },
   });
 
+  const getRoute = (role: string) => {
+    switch (role) {
+      case USER_ROLES.ADMIN:
+        return "/admin";
+      case USER_ROLES.SUPER_ADMIN:
+        return "/admin";
+      case USER_ROLES.USER:
+        return "/user";
+      case USER_ROLES.AGENT:
+        return "/agent";
+      default:
+        return "/";
+    }
+  };
+
   const onSubmit = async (values: z.infer<typeof loginUserValidationSchema>) => {
     try {
       const res = await loginUserFn(values).unwrap();
@@ -30,12 +46,13 @@ export default function LoginPage() {
         // expire in 30 days
         const expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
         document.cookie = `user=${true}; path=/; expires=${expires.toUTCString()}`;
-        navigate("/", { replace: true });
+
+        const userRole = res.data.role;
+
+        navigate(getRoute(userRole), { replace: true });
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      console.log(error.data.message);
-
       if (error.data.message === "User is not verified") {
         navigate("/verify-email", {
           state: { email: values.email },
