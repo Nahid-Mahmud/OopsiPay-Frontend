@@ -19,8 +19,6 @@ export function UserManagementTable() {
     role: USER_ROLES.USER,
   });
 
-  console.log(data);
-
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -48,8 +46,6 @@ export function UserManagementTable() {
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
 
   const handleStatusChange = async (userId: string, newStatus: IsActive) => {
-    console.log(`Updating user ${userId} status to ${newStatus}`);
-
     const updateData = {
       isActive: newStatus,
     };
@@ -61,14 +57,13 @@ export function UserManagementTable() {
         toast.success("User status updated successfully.");
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error("Error updating user:", error);
       toast.error("Failed to update user status.");
     }
   };
 
   const handleDeleteUser = async (userId: string, isDeleted: boolean) => {
-    console.log(`Updating user ${userId} delete status to ${!isDeleted}`);
-
     const updateData = {
       isDeleted: !isDeleted,
     };
@@ -79,6 +74,7 @@ export function UserManagementTable() {
         toast.success(`User ${!isDeleted ? "deleted" : "recovered"} successfully.`);
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error("Error updating user delete status:", error);
       toast.error(`Failed to ${!isDeleted ? "delete" : "recover"} user.`);
     }
