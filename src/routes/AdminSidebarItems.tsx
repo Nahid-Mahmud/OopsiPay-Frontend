@@ -9,19 +9,17 @@
 // import AllUsersPage from "@/pages/admin/AllUsers";
 // import AllWallets from "@/pages/admin/AllWallets";
 
-import MyWallet from "@/components/MyWallet";
+// import MyWallet from "@/components/MyWallet";
 import type { ISidebarItem } from "@/types";
 import { ArrowLeftRight, ChartLine, HatGlasses, Lock, Settings, Users, Wallet } from "lucide-react";
 import { lazy } from "react";
 
 const Analytics = lazy(() => import("@/pages/admin/Analytics"));
 const ChangePassword = lazy(() => import("@/components/ChangePassword"));
-const ChangePinPage = lazy(() =>
-  import("@/components/ChangePin").then((module) => ({ default: module.ChangePinPage }))
-);
+const ChangePinPage = lazy(() => import("@/components/ChangePin"));
 const MyTransactions = lazy(() => import("@/components/MyTransactions"));
-// const MyWallet = lazy(() => import("@/components/MyWallet"));
-const Profile = lazy(() => import("@/components/Profile").then((module) => ({ default: module.Profile })));
+const MyWallet = lazy(() => import("@/components/MyWallet"));
+const Profile = lazy(() => import("@/components/Profile"));
 const AllAgents = lazy(() => import("@/pages/admin/AllAgents"));
 const AllTransactions = lazy(() => import("@/pages/admin/AllTransactions"));
 const AllUsersPage = lazy(() => import("@/pages/admin/AllUsers"));
@@ -54,7 +52,7 @@ export const AdminSidebarItems: ISidebarItem[] = [
   },
   {
     title: "My Transactions",
-    url: "/admin/transactions",
+    url: "#",
     items: [
       {
         title: "All Transactions",
