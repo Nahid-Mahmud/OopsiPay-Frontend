@@ -2,14 +2,9 @@ import { baseApi } from "@/redux/baseApi";
 import type { TResponse } from "@/types/response.types";
 import type { ITransaction } from "@/types/transaction.types";
 
-interface TransactionQueryParams {
-  page?: number;
-  limit?: number;
-}
-
 export const transactionApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getAllTransactions: builder.query<TResponse<ITransaction[]>, TransactionQueryParams>({
+    getAllTransactions: builder.query<TResponse<ITransaction[]>, Record<string, unknown>>({
       query: (params) => ({
         url: "/transaction/get-all",
         method: "GET",
@@ -17,10 +12,11 @@ export const transactionApi = baseApi.injectEndpoints({
       }),
       providesTags: ["Transaction"],
     }),
-    getMyTransactions: builder.query<TResponse<ITransaction[]>, null>({
-      query: () => ({
+    getMyTransactions: builder.query<TResponse<ITransaction[]>, Record<string, unknown>>({
+      query: (params) => ({
         url: "/transaction/my-transactions",
         method: "GET",
+        params,
       }),
       providesTags: ["Transaction"],
     }),
