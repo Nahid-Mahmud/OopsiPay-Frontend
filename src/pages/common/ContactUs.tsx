@@ -17,7 +17,7 @@ const cards = [
     id: "email",
     title: "Email",
     subtitle: "Get a response within 24 hours",
-    detail: "hello@company.com",
+    detail: "hello@oopsipay.com",
     Icon: Mail,
   },
   {
