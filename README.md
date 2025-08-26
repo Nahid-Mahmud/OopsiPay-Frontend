@@ -155,16 +155,6 @@ pnpm lint
 
 Fix any errors reported by `tsc -b` before merging.
 
-## Testing
-
-The repository currently has no tests. Recommended additions:
-
-- **Unit Tests**: For `src/hooks/use-debounce.ts` and `src/lib/utils.ts`
-- **Component Tests**: For critical UI (e.g., `TransactionsTable`, `TransactionDetailsModal`)
-- **Integration Tests**: For authentication flows
-
-**Suggested Tools**: Vitest + React Testing Library
-
 ## Continuous Integration (CI)
 
 Set up a GitHub Actions workflow for pull requests with the following jobs:
