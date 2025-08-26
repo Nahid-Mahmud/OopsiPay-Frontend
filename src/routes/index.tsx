@@ -13,6 +13,8 @@ import HomePage from "@/pages/common/Home";
 import { generateRoutes } from "@/utils/generateRoutes";
 import { createBrowserRouter, Navigate } from "react-router";
 import { AdminSidebarItems } from "./AdminSidebarItems";
+import { UserSidebarItems } from "./UserSidebarItems";
+import { AgentSidebarItems } from "./AgentSidebarItems";
 
 export const router = createBrowserRouter([
   {
@@ -72,6 +74,28 @@ export const router = createBrowserRouter([
         element: <Navigate to="/admin/analytics" replace />,
       },
       ...generateRoutes(AdminSidebarItems),
+    ],
+  },
+  {
+    path: "/user",
+    Component: DashboardLayout,
+    children: [
+      {
+        index: true,
+        element: <Navigate to="/user/wallet" replace />,
+      },
+      ...generateRoutes(UserSidebarItems),
+    ],
+  },
+  {
+    path: "/agent",
+    Component: DashboardLayout,
+    children: [
+      {
+        index: true,
+        element: <Navigate to="/agent/wallet" replace />,
+      },
+      ...generateRoutes(AgentSidebarItems),
     ],
   },
 ]);
