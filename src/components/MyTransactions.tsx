@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -21,30 +21,28 @@ import { useGetMyTransactionsQuery } from "@/redux/features/transaction/transact
 import { useGetMyWalletQuery } from "@/redux/features/wallet/wallet.api";
 
 export default function MyTransactions() {
-  const { data, isLoading, error } = useGetMyTransactionsQuery(null);
-
-  const [copiedItems, setCopiedItems] = useState<Set<string>>(new Set());
-  const { data: myWallet, isLoading: isLoadingWallet } = useGetMyWalletQuery();
-
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
+  const params = {
+    page: currentPage,
+    limit: itemsPerPage,
+  };
+
+  const { data, isLoading, error } = useGetMyTransactionsQuery(params);
+
+  const [copiedItems, setCopiedItems] = useState<Set<string>>(new Set());
+  const { data: myWallet, isLoading: isLoadingWallet } = useGetMyWalletQuery();
+
   const transactions = useMemo(() => data?.data || [], [data?.data]);
+  const meta = data?.meta;
 
-  // Calculate pagination
-  const totalPages = Math.ceil(transactions.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentTransactions = useMemo(
-    () => transactions.slice(startIndex, endIndex),
-    [transactions, startIndex, endIndex]
-  );
-
-  // Reset to first page when data changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [transactions.length]);
+  // Get pagination info from backend meta
+  const totalPages = meta?.totalPages || 1;
+  const totalItems = meta?.total || 0;
+  const startIndex = meta ? (meta.page - 1) * meta.limit + 1 : 0;
+  const endIndex = meta ? Math.min(meta.page * meta.limit, totalItems) : 0;
 
   const copyToClipboard = async (text: string, label: string) => {
     try {
@@ -117,10 +115,8 @@ export default function MyTransactions() {
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle>My Transactions</CardTitle>
         <div className="text-sm text-muted-foreground">
-          {transactions.length > 0
-            ? `Showing ${startIndex + 1}-${Math.min(endIndex, transactions.length)} of ${
-                transactions.length
-              } transaction${transactions.length > 1 ? "s" : ""}`
+          {totalItems > 0
+            ? `Showing ${startIndex}-${endIndex} of ${totalItems} transaction${totalItems > 1 ? "s" : ""}`
             : "No transactions found"}
         </div>
       </CardHeader>
@@ -180,7 +176,7 @@ export default function MyTransactions() {
                   </TableCell>
                 </TableRow>
               ) : (
-                currentTransactions.map((transaction: ITransaction) => (
+                transactions.map((transaction: ITransaction) => (
                   <TableRow key={transaction._id}>
                     <TableCell className="font-mono text-sm">
                       <div className="flex items-center">
@@ -207,7 +203,7 @@ export default function MyTransactions() {
         </div>
 
         {/* Pagination */}
-        {
+        {totalPages > 1 && (
           <div className="mt-4">
             <Pagination>
               <PaginationContent>
@@ -256,7 +252,7 @@ export default function MyTransactions() {
               </PaginationContent>
             </Pagination>
           </div>
-        }
+        )}
       </CardContent>
     </Card>
   );
