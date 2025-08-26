@@ -49,6 +49,7 @@ export function ChangePinPage() {
         changePinForm.reset();
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error("Change PIN error:", error);
       toast.error("Failed to change PIN. Please try again.");
     }
@@ -65,6 +66,7 @@ export function ChangePinPage() {
         setPinForm.reset();
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error("Set PIN error:", error);
       toast.error("Failed to set PIN. Please try again.");
     }
