@@ -1,10 +1,6 @@
-import { useState, useMemo } from "react";
-import { Copy, Check } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   Pagination,
   PaginationContent,
@@ -14,20 +10,45 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Check, Copy } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 
-import type { ITransaction } from "@/types/transaction.types";
 import { useGetMyTransactionsQuery } from "@/redux/features/transaction/transaction.api";
+import { useUserInfoQuery } from "@/redux/features/user/user.api";
 import { useGetMyWalletQuery } from "@/redux/features/wallet/wallet.api";
+import type { ITransaction } from "@/types/transaction.types";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "./ui/select";
+import type { TRole } from "@/types/user.types";
 
 export default function MyTransactions() {
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedTransactionType, setSelectedTransactionType] = useState<string>("all");
+  const [days, setDays] = useState<number>(7);
+
+  // Handler to reset page when transaction type changes
+  const handleTransactionTypeChange = (type: string) => {
+    setSelectedTransactionType(type);
+    setCurrentPage(1);
+  };
   const itemsPerPage = 10;
+
+  const { data: userInfo, isLoading: isLoadingUserInfo } = useUserInfoQuery();
+
+  const userRole = userInfo?.data?.role;
+
+  const userTransactionTypes = ["CASH_IN", "CASH_OUT", "SEND_MONEY"];
+  const agentTransactionTypes = ["CASH_IN", "CASH_OUT", "ADMIN_CREDIT"];
+  const adminTransactionTypes = ["ADMIN_CREDIT"];
 
   const params = {
     page: currentPage,
     limit: itemsPerPage,
+    transactionType: selectedTransactionType === "all" ? undefined : selectedTransactionType,
+    days: days === 0 ? undefined : days,
   };
 
   const { data, isLoading, error } = useGetMyTransactionsQuery(params);
@@ -35,7 +56,7 @@ export default function MyTransactions() {
   const [copiedItems, setCopiedItems] = useState<Set<string>>(new Set());
   const { data: myWallet, isLoading: isLoadingWallet } = useGetMyWalletQuery();
 
-  const transactions = useMemo(() => data?.data || [], [data?.data]);
+  const transactions = data?.data || [];
   const meta = data?.meta;
 
   // Get pagination info from backend meta
@@ -110,14 +131,76 @@ export default function MyTransactions() {
     });
   };
 
+  // console.log(TransactionType);
+
+  const getTransactionTypes = (role: TRole) => {
+    switch (role) {
+      case "USER":
+        return userTransactionTypes;
+      case "AGENT":
+        return agentTransactionTypes;
+      case "ADMIN":
+        return adminTransactionTypes;
+      default:
+        return [];
+    }
+  };
+
+  const setSelectedDays = (days: string) => {
+    setDays(days === "all" ? 0 : Number(days));
+    setCurrentPage(1);
+  };
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle>My Transactions</CardTitle>
-        <div className="text-sm text-muted-foreground">
-          {totalItems > 0
-            ? `Showing ${startIndex}-${endIndex} of ${totalItems} transaction${totalItems > 1 ? "s" : ""}`
-            : "No transactions found"}
+
+        <div className="flex items-center justify-center gap-5">
+          {/* select days */}
+          <Select onValueChange={setSelectedDays} defaultValue="7">
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select Days" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="all">All Time</SelectItem>
+                <SelectLabel>Select Days</SelectLabel>
+                <SelectItem value="3">Last 3 Days</SelectItem>
+                <SelectItem value="7">Last 7 Days</SelectItem>
+                <SelectItem value="30">Last 30 Days</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+
+          <Select onValueChange={handleTransactionTypeChange} defaultValue="all">
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Transaction Types" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Transaction Types</SelectLabel>
+                <SelectItem defaultChecked value="all">
+                  All
+                </SelectItem>
+                {isLoadingUserInfo ? (
+                  <SelectItem value="loading" disabled>
+                    Loading...
+                  </SelectItem>
+                ) : (
+                  getTransactionTypes(userRole as TRole).map((type) => (
+                    <SelectItem key={type} value={type}>
+                      {type.replace("_", " ")}
+                    </SelectItem>
+                  ))
+                )}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+
+          <div className="text-sm text-muted-foreground">
+            {totalItems > 0 ? `Showing ${startIndex}-${endIndex} of ${totalItems} ` : "No transactions found"}
+          </div>
         </div>
       </CardHeader>
       <CardContent>
