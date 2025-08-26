@@ -11,8 +11,20 @@ import {
 } from "@/components/ui/pagination";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Eye } from "lucide-react";
+import { Eye, Search } from "lucide-react";
 import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+import { useDebounce } from "@/hooks/use-debounce";
 
 import { useGetAllTransactionsQuery } from "@/redux/features/transaction/transaction.api";
 import type { ITransaction } from "@/types/transaction.types";
@@ -20,17 +32,23 @@ import { TransactionDetailsModal } from "./TransactionDetailsModal";
 
 export function TransactionsTable() {
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedTransactionType, setSelectedTransactionType] = useState<string>("all");
+  const [days, setDays] = useState<number>(7);
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [selectedTransaction, setSelectedTransaction] = useState<ITransaction | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const {
-    data: transactionsResponse,
-    isLoading,
-    error,
-  } = useGetAllTransactionsQuery({
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+
+  const params = {
     page: currentPage,
     limit: 10,
-  });
+    transactionType: selectedTransactionType === "all" ? undefined : selectedTransactionType,
+    days: days === 0 ? undefined : days,
+    ...(debouncedSearchTerm && { searchTerm: debouncedSearchTerm }),
+  };
+
+  const { data: transactionsResponse, isLoading, error } = useGetAllTransactionsQuery(params);
 
   const transactions = transactionsResponse?.data || [];
   const meta = transactionsResponse?.meta;
@@ -62,6 +80,18 @@ export function TransactionsTable() {
     return <Badge className={colors[type as keyof typeof colors] || ""}>{type.replace("_", " ")}</Badge>;
   };
 
+  const transactionTypes = ["CASH_IN", "CASH_OUT", "SEND_MONEY", "ADMIN_CREDIT"];
+
+  const setSelectedDays = (value: string) => {
+    setDays(value === "all" ? 0 : Number(value));
+    setCurrentPage(1);
+  };
+
+  const handleTransactionTypeChange = (type: string) => {
+    setSelectedTransactionType(type);
+    setCurrentPage(1);
+  };
+
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -79,23 +109,78 @@ export function TransactionsTable() {
     });
   };
 
+  const isSearching = searchTerm !== debouncedSearchTerm && searchTerm.length > 0;
+
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value || "");
+    setCurrentPage(1);
+  };
+
   return (
     <>
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardHeader className="flex flex-col md:flex-row items-center justify-between md:space-y-0 space-y-2 pb-2">
           <CardTitle>Transactions</CardTitle>
-          {meta && (
-            <div className="text-sm text-muted-foreground">
-              {meta.total > 0 ? (
-                <>
-                  Showing {(meta.page - 1) * meta.limit + 1}-{Math.min(meta.page * meta.limit, meta.total)} of{" "}
-                  {meta.total} transactions
-                </>
-              ) : (
-                "No transactions found"
+
+          <div className="flex flex-col md:flex-row items-center justify-center gap-5">
+            <div className="relative md:w-80">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+              <Input
+                placeholder="Search transactions..."
+                className="pl-10"
+                value={searchTerm || ""}
+                onChange={(e) => handleSearchChange(e.target.value)}
+              />
+              {isSearching && (
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                  <div className="animate-spin h-4 w-4 border-2 border-primary border-t-transparent rounded-full"></div>
+                </div>
               )}
             </div>
-          )}
+            <Select onValueChange={setSelectedDays} defaultValue="7">
+              <SelectTrigger className="md:w-[180px] w-full">
+                <SelectValue placeholder="Select Days" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Select Days</SelectLabel>
+                  <SelectItem value="3">Last 3 Days</SelectItem>
+                  <SelectItem value="7">Last 7 Days</SelectItem>
+                  <SelectItem value="30">Last 30 Days</SelectItem>
+                  <SelectItem value="all">All Time</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+
+            <Select onValueChange={handleTransactionTypeChange} defaultValue="all">
+              <SelectTrigger className="md:w-[180px] w-full">
+                <SelectValue placeholder="Transaction Types" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Transaction Types</SelectLabel>
+                  <SelectItem defaultChecked value="all">
+                    All
+                  </SelectItem>
+                  {transactionTypes.map((type) => (
+                    <SelectItem key={type} value={type}>
+                      {type.replace("_", " ")}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+
+            {meta && (
+              <div className="text-sm text-muted-foreground">
+                {meta.total > 0
+                  ? `Showing ${(meta.page - 1) * meta.limit + 1}-${Math.min(meta.page * meta.limit, meta.total)} of ${
+                      meta.total
+                    } transactions`
+                  : "No transactions found"}
+              </div>
+            )}
+          </div>
         </CardHeader>
         <CardContent>
           <div className="rounded-md border">
@@ -152,7 +237,25 @@ export function TransactionsTable() {
                 ) : transactions.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
-                      No transactions found
+                      <div className="flex flex-col items-center justify-center">
+                        <div className="mb-2">
+                          {searchTerm && transactions.length === 0
+                            ? "No transactions found matching your search."
+                            : "No transactions found"}
+                        </div>
+                        {searchTerm && transactions.length === 0 && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setSearchTerm("");
+                              setCurrentPage(1);
+                            }}
+                          >
+                            Clear search
+                          </Button>
+                        )}
+                      </div>
                     </TableCell>
                   </TableRow>
                 ) : (
