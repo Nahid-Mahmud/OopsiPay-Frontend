@@ -14,40 +14,87 @@ import {
   SidebarMenuSub,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import { USER_ROLES } from "@/constants/user.constants";
+import { useUserInfoQuery } from "@/redux/features/user/user.api";
 import { AdminSidebarItems } from "@/routes/AdminSidebarItems";
+import { AgentSidebarItems } from "@/routes/AgentSidebarItems";
+import { UserSidebarItems } from "@/routes/UserSidebarItems";
 import type { ISidebarItem } from "@/types";
-import { Link, useNavigate } from "react-router";
-import { Button } from "./ui/button";
-import { useLogoutMutation } from "@/redux/features/auth/auth.api";
+import { NavLink, useLocation } from "react-router";
+import LogoutButton from "./LogoutButton";
+import { Skeleton } from "./ui/skeleton";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const [logout] = useLogoutMutation();
-  const navigate = useNavigate();
-  const handleLogout = async () => {
-    // remove user session form cookie
-    document.cookie = "user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    // console.log("User logged out");
-    await logout({}).unwrap();
-    navigate("/login");
+  const location = useLocation();
+  const { data: userData, isLoading: userDataLoading } = useUserInfoQuery();
+
+  const sideBarItems = () => {
+    switch (userData?.data?.role) {
+      case USER_ROLES.ADMIN:
+        return AdminSidebarItems;
+      case USER_ROLES.SUPER_ADMIN:
+        return AdminSidebarItems;
+      case USER_ROLES.USER:
+        return UserSidebarItems;
+      case USER_ROLES.AGENT:
+        return AgentSidebarItems;
+      default:
+        return [];
+    }
   };
+
+  const getSectionIndex = (pathname: string, items: ISidebarItem[]) => {
+    for (let i = 0; i < items.length; i++) {
+      const section = items[i];
+      if (section.items.some((item) => item.url === pathname)) {
+        return i;
+      }
+    }
+    return 0;
+  };
+
+  const currentSidebarItems = sideBarItems();
+  const activeSectionIndex = getSectionIndex(location.pathname, currentSidebarItems);
 
   return (
     <Sidebar {...props}>
       <SidebarContent className="flex flex-col h-full">
         <SidebarGroup className="flex-1">
-          <SidebarGroupLabel>Admin Panel</SidebarGroupLabel>
+          <SidebarGroupLabel>
+            {userDataLoading ? (
+              <Skeleton className="h-4 w-24" />
+            ) : userData?.data?.role === USER_ROLES.USER ? (
+              "User Panel"
+            ) : (
+              "Admin Panel"
+            )}
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {AdminSidebarItems.map((item, index) => (
-                <SidebarItem key={index} item={item} isFirst={index === 0} />
-              ))}
+              {userDataLoading
+                ? // Loading skeleton
+                  Array.from({ length: 3 }).map((_, index) => (
+                    <SidebarMenuItem key={index}>
+                      <div className="space-y-2 p-2">
+                        <Skeleton className="h-4 w-32" />
+                        <div className="ml-4 space-y-1">
+                          <Skeleton className="h-3 w-24" />
+                          <Skeleton className="h-3 w-28" />
+                        </div>
+                      </div>
+                    </SidebarMenuItem>
+                  ))
+                : currentSidebarItems.map((item, index) => (
+                    <SidebarItem key={index} item={item} isOpen={index === activeSectionIndex} />
+                  ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarGroup>
-          <Button onClick={handleLogout} variant={"destructive"} className="cursor-pointer">
+          {/* <Button onClick={handleLogout} variant={"destructive"} className="cursor-pointer">
             Logout
-          </Button>
+          </Button> */}
+          <LogoutButton />
         </SidebarGroup>
       </SidebarContent>
       <SidebarRail />
@@ -55,12 +102,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   );
 }
 
-function SidebarItem({ item, isFirst = false }: { item: ISidebarItem; isFirst?: boolean }) {
+function SidebarItem({ item, isOpen = false }: { item: ISidebarItem; isOpen?: boolean }) {
   return (
     <SidebarMenuItem>
       <Collapsible
         className="group/collapsible [&[data-state=open]>button>svg:first-child]:rotate-90"
-        defaultOpen={isFirst}
+        defaultOpen={isOpen}
       >
         <CollapsibleTrigger asChild>
           <SidebarMenuButton>
@@ -73,10 +120,20 @@ function SidebarItem({ item, isFirst = false }: { item: ISidebarItem; isFirst?: 
           <SidebarMenuSub>
             {item.items.map((subItem, index) => (
               <SidebarMenuButton key={index} isActive={false} className="data-[active=true]:bg-transparent">
-                <Link to={subItem.url} className="inline-flex items-center gap-2">
+                <NavLink
+                  to={subItem.url}
+                  // className="inline-flex items-center gap-2"
+                  className={({ isActive, isPending }) =>
+                    isPending
+                      ? "text-muted-foreground inline-flex items-center gap-2"
+                      : isActive
+                      ? "font-medium inline-flex items-center gap-2 text-primary/80"
+                      : "transition-opacity inline-flex items-center gap-2"
+                  }
+                >
                   {subItem.icon ? subItem.icon : <File />}
                   {subItem.title}
-                </Link>
+                </NavLink>
               </SidebarMenuButton>
             ))}
           </SidebarMenuSub>
