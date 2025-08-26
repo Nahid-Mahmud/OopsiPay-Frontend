@@ -2,6 +2,7 @@ import PasswordInput from "@/components/PasswordInput";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useRegisterMutation } from "@/redux/features/user/user.api";
 
 import { registerUserValidationSchema } from "@/validations/user.zod.validation";
@@ -24,6 +25,7 @@ export default function RegisterPage() {
       email: "",
       password: "",
       cPassword: "",
+      role: "USER",
     },
   });
 
@@ -108,7 +110,32 @@ export default function RegisterPage() {
                   )}
                 />
               </div>
-
+              <div className="space-y-2">
+                <FormField
+                  control={form.control}
+                  name="role"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Role</FormLabel>
+                      <FormControl>
+                        <Select value={field.value} onValueChange={field.onChange} required>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select Role" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              <SelectItem value="USER">User</SelectItem>
+                              <SelectItem value="AGENT">Agent</SelectItem>
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormDescription className="sr-only">This is your public display Role.</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <div className="space-y-0.5">
                 <PasswordInput form={form} />
               </div>
