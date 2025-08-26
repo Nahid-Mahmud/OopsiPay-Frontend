@@ -15,6 +15,8 @@ import { createBrowserRouter, Navigate } from "react-router";
 import { AdminSidebarItems } from "./AdminSidebarItems";
 import { UserSidebarItems } from "./UserSidebarItems";
 import { AgentSidebarItems } from "./AgentSidebarItems";
+import withAuth from "@/hooks/withAuth";
+import UnauthorizedPage from "@/components/Unauthorized";
 
 export const router = createBrowserRouter([
   {
@@ -67,7 +69,7 @@ export const router = createBrowserRouter([
 
   {
     path: "/admin",
-    Component: DashboardLayout,
+    Component: withAuth(DashboardLayout, ["ADMIN", "SUPER_ADMIN"]),
     children: [
       {
         index: true,
@@ -78,7 +80,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/user",
-    Component: DashboardLayout,
+    Component: withAuth(DashboardLayout, ["USER"]),
     children: [
       {
         index: true,
@@ -89,7 +91,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/agent",
-    Component: DashboardLayout,
+    Component: withAuth(DashboardLayout, ["AGENT"]),
     children: [
       {
         index: true,
@@ -97,5 +99,9 @@ export const router = createBrowserRouter([
       },
       ...generateRoutes(AgentSidebarItems),
     ],
+  },
+  {
+    path: "/unauthorized",
+    Component: UnauthorizedPage,
   },
 ]);
