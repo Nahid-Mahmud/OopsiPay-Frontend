@@ -22,6 +22,9 @@ export const registerUserValidationSchema = z
     email: z.email("Invalid email format").min(1, "Email is required"),
     password: passwordZodValidationSchema,
     cPassword: z.string().min(8, "Confirm Password is required"),
+    role: z.enum(["USER", "AGENT"], {
+      message: "Role is required",
+    }),
   })
   .refine((data) => data.password === data.cPassword, {
     message: "Passwords must match",
