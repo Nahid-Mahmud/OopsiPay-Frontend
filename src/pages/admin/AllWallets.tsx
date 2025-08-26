@@ -39,8 +39,6 @@ export default function AllWallets() {
     ...(debouncedSearchTerm && { searchTerm: debouncedSearchTerm }),
   });
 
-  console.log(data);
-
   // Check if we're currently searching (debounced value differs from actual input)
   const isSearching = searchTerm !== debouncedSearchTerm && searchTerm.length > 0;
 
@@ -50,8 +48,6 @@ export default function AllWallets() {
   const totalWallets = meta?.total || 0;
 
   const handleStatusChange = async (walletId: string, newStatus: TWalletStatus) => {
-    console.log(`Updating wallet ${walletId} status to ${newStatus}`);
-
     const updateData = {
       walletStatus: newStatus,
     };
@@ -63,6 +59,7 @@ export default function AllWallets() {
         toast.success("Wallet status updated successfully.");
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error("Error updating wallet:", error);
       toast.error("Failed to update wallet status.");
     }
