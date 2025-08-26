@@ -97,7 +97,7 @@ export default function HeroSection() {
                         <p className="font-dm-sans text-black/80">
                           YOU JUST SENT
                           <br />
-                          €15 TO ALANA.
+                          ৳15 TO ALANA.
                         </p>
                       </div>
 
@@ -111,7 +111,7 @@ export default function HeroSection() {
               <Card className="absolute -top-4 -left-8 p-3 bg-white/90 backdrop-blur-sm animate-float-reverse">
                 <div className="flex items-center space-x-2">
                   <div className="w-3 h-3 bg-primary rounded-full"></div>
-                  <span className="font-dm-sans text-sm font-medium">€25.00</span>
+                  <span className="font-dm-sans text-sm font-medium">৳25.00</span>
                 </div>
               </Card>
 
