@@ -22,9 +22,19 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function AllWallets() {
   const [updateWalletStatusFn, { isLoading: updateWalletStatusLoading }] = useUpdateWalletStatusMutation();
+  const [walletType, setWalletType] = useState<TWalletType | null>(null);
 
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -37,6 +47,7 @@ export default function AllWallets() {
     page: currentPage,
     limit: itemsPerPage,
     ...(debouncedSearchTerm && { searchTerm: debouncedSearchTerm }),
+    ...(walletType && { walletType }),
   });
 
   // Check if we're currently searching (debounced value differs from actual input)
@@ -132,7 +143,7 @@ export default function AllWallets() {
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
-      currency: "USD",
+      currency: "BDT",
     }).format(amount);
   };
 
@@ -228,19 +239,38 @@ export default function AllWallets() {
           <CardHeader className="border-b border-border/40">
             <CardTitle className="flex flex-col items-start md:flex-row md:items-center md:justify-between">
               <span>All Wallets ({totalWallets})</span>
-              <div className="relative md:w-80 mt-4">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                <Input
-                  placeholder="Search wallets..."
-                  value={searchTerm || ""}
-                  onChange={(e) => handleSearchChange(e.target.value)}
-                  className="pl-10"
-                />
-                {isSearching && (
-                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                    <div className="animate-spin h-4 w-4 border-2 border-primary border-t-transparent rounded-full"></div>
-                  </div>
-                )}
+              <div className="flex flex-col mt-5 md:flex-row md:items-center md:justify-center gap-5">
+                <Select
+                  onValueChange={(value) => setWalletType(value === "all" ? null : (value as TWalletType))}
+                  defaultValue="all"
+                >
+                  <SelectTrigger className="md:w-[180px] w-full">
+                    <SelectValue placeholder="Select Wallet" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Select Wallet</SelectLabel>
+                      <SelectItem value="all">All Wallets</SelectItem>
+                      <SelectItem value="ADMIN">Admin Wallet</SelectItem>
+                      <SelectItem value="USER">User Wallet</SelectItem>
+                      <SelectItem value="MERCHANT">Merchant Wallet</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                <div className="relative md:w-80 ">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                  <Input
+                    placeholder="Search wallets..."
+                    value={searchTerm || ""}
+                    onChange={(e) => handleSearchChange(e.target.value)}
+                    className="pl-10"
+                  />
+                  {isSearching && (
+                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                      <div className="animate-spin h-4 w-4 border-2 border-primary border-t-transparent rounded-full"></div>
+                    </div>
+                  )}
+                </div>
               </div>
             </CardTitle>
           </CardHeader>
