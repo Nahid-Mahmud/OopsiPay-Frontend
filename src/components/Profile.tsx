@@ -22,7 +22,7 @@ const profileUpdateValidationSchema = z.object({
   address: z.string().optional(),
 });
 
-export function Profile() {
+export default function Profile() {
   const { data: userInfo, isLoading: isLoadingUserInfo, isError } = useUserInfoQuery();
   const [updateUserFn, { isLoading: isUpdating }] = useUpdateUserMutation();
 
@@ -81,6 +81,7 @@ export function Profile() {
         }
       } catch (error) {
         toast.error("Failed to upload image");
+        // eslint-disable-next-line no-console
         console.log(error);
       }
     }
