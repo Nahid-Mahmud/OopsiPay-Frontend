@@ -22,9 +22,9 @@ interface PaymentOptionsProps {
 const paymentOptions: PaymentOption[] = [
   {
     type: "CASH_IN",
-    label: "Add Money",
+    label: "Cash In",
     icon: ArrowDownToLine,
-    description: "Add funds to your wallet",
+    description: "Add funds to User wallet",
     allowedRoles: ["AGENT"], // Only agents can use CASH_IN
   },
   {
