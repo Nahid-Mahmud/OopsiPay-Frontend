@@ -8,42 +8,42 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useGetAllUsersQuery, useUpdateUserMutation } from "@/redux/features/user/user.api";
 import type { IsActive, IUser, TRole } from "@/types/user.types";
 import { USER_STATUS, USER_ROLES } from "@/constants/user.constants";
-import { ChevronLeft, ChevronRight, MoreHorizontal, Search, Shield, Trash2, UserCheck, UserX } from "lucide-react";
-import { useMemo, useState } from "react";
+import { MoreHorizontal, Search, Shield, Trash2, UserCheck, UserX } from "lucide-react";
+import { useState } from "react";
+import { useDebounce } from "@/hooks/use-debounce";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import { toast } from "sonner";
 
 export function AgentManagementTable() {
   const [updateUserFn, { isLoading: updateUserLoading }] = useUpdateUserMutation();
-
-  const { data, isLoading, isError } = useGetAllUsersQuery({
-    role: USER_ROLES.AGENT,
-  });
 
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
 
   const itemsPerPage = 10;
 
-  const agentList = useMemo(() => (data?.data as IUser[]) || [], [data?.data]);
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
-  const filteredAgents = useMemo(() => {
-    const searchString = (searchTerm || "").toLowerCase();
-    return agentList.filter(
-      (agent: IUser) =>
-        agent.firstName.toLowerCase().includes(searchString) ||
-        agent.lastName.toLowerCase().includes(searchString) ||
-        agent.email.toLowerCase().includes(searchString) ||
-        agent.role.toLowerCase().includes(searchString) ||
-        agent._id.toLowerCase().includes(searchString)
-    );
-  }, [agentList, searchTerm]);
+  // server-side params
+  const params = {
+    role: USER_ROLES.AGENT,
+    page: String(currentPage),
+    limit: String(itemsPerPage),
+    ...(debouncedSearchTerm && { searchTerm: debouncedSearchTerm }),
+  };
 
-  const paginatedAgents = useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    return filteredAgents.slice(startIndex, startIndex + itemsPerPage);
-  }, [filteredAgents, currentPage]);
+  const { data: agentsResponse, isLoading, isError } = useGetAllUsersQuery(params);
 
-  const totalPages = Math.ceil(filteredAgents.length / itemsPerPage);
+  const agents = (agentsResponse?.data as IUser[]) || [];
+  const meta = agentsResponse?.meta;
+  const totalPages = meta?.totalPages || 1;
 
   const handleStatusChange = async (agentId: string, newStatus: IsActive) => {
     const updateData = {
@@ -207,7 +207,7 @@ export function AgentManagementTable() {
     <Card className="p-5">
       <CardHeader className="border-b border-border/40">
         <CardTitle className="flex flex-col items-start md:flex-row md:items-center md:justify-between">
-          <span>Agents ({filteredAgents.length})</span>
+          <span>Agents ({agents.length})</span>
           <div className="relative md:w-80 mt-4">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
@@ -234,16 +234,14 @@ export function AgentManagementTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {paginatedAgents.length === 0 ? (
+            {agents.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={7} className="h-40 text-center">
                   <div className="flex flex-col items-center justify-center">
                     <div className="text-muted-foreground mb-2">
-                      {filteredAgents.length === 0 && agentList.length > 0
-                        ? "No agents found matching your search."
-                        : "No agents found."}
+                      {searchTerm && agents.length === 0 ? "No agents found matching your search." : "No agents found."}
                     </div>
-                    {filteredAgents.length === 0 && agentList.length > 0 && (
+                    {searchTerm && agents.length === 0 && (
                       <Button
                         variant="outline"
                         size="sm"
@@ -259,10 +257,10 @@ export function AgentManagementTable() {
                 </TableCell>
               </TableRow>
             ) : (
-              paginatedAgents.map((agent: IUser, index: number) => (
+              agents.map((agent: IUser, index: number) => (
                 <TableRow
                   key={agent._id}
-                  className={index === paginatedAgents.length - 1 ? "border-0" : "border-b border-border/20"}
+                  className={index === agents.length - 1 ? "border-0" : "border-b border-border/20"}
                 >
                   <TableCell className="font-medium">
                     {agent.firstName} {agent.lastName}
@@ -375,51 +373,52 @@ export function AgentManagementTable() {
           </TableBody>
         </Table>
 
-        {/* Pagination  */}
-        {
-          <div className="flex items-center justify-between px-6 py-4 border-t border-border/40">
-            <div className="text-sm text-muted-foreground">
-              Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
-              {Math.min(currentPage * itemsPerPage, filteredAgents.length)} of {filteredAgents.length} results
-            </div>
-            <div className="flex items-center space-x-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1}
-              >
-                <ChevronLeft className="h-4 w-4" />
-                Previous
-              </Button>
-              <div className="flex items-center space-x-1">
-                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                  const pageNum = i + 1;
-                  return (
-                    <Button
-                      key={pageNum}
-                      variant={currentPage === pageNum ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setCurrentPage(pageNum)}
-                      className="w-8 h-8 p-0"
-                    >
-                      {pageNum}
-                    </Button>
-                  );
-                })}
+        {/* Pagination */}
+        {meta && (
+          <div className="mt-4 px-6 py-4 border-t border-border/40">
+            <div className="flex items-center justify-between">
+              <div className="text-sm text-muted-foreground">
+                {meta.total > 0
+                  ? `Showing ${(meta.page - 1) * meta.limit + 1}-${Math.min(meta.page * meta.limit, meta.total)} of ${
+                      meta.total
+                    } agents`
+                  : "No agents found"}
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                disabled={currentPage === totalPages}
-              >
-                Next
-                <ChevronRight className="h-4 w-4" />
-              </Button>
+
+              {totalPages > 1 && (
+                <Pagination>
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious
+                        onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                        className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                      />
+                    </PaginationItem>
+
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                      <PaginationItem key={page}>
+                        <PaginationLink
+                          onClick={() => setCurrentPage(page)}
+                          isActive={currentPage === page}
+                          className="cursor-pointer"
+                        >
+                          {page}
+                        </PaginationLink>
+                      </PaginationItem>
+                    ))}
+
+                    <PaginationItem>
+                      <PaginationNext
+                        onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                        className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+              )}
             </div>
           </div>
-        }
+        )}
       </CardContent>
     </Card>
   );

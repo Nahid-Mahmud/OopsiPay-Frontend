@@ -4,46 +4,46 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { useDebounce } from "@/hooks/use-debounce";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useGetAllUsersQuery, useUpdateUserMutation } from "@/redux/features/user/user.api";
 import type { IsActive, IUser, TRole } from "@/types/user.types";
 import { USER_STATUS, USER_ROLES } from "@/constants/user.constants";
-import { ChevronLeft, ChevronRight, MoreHorizontal, Search, Shield, Trash2, UserCheck, UserX } from "lucide-react";
-import { useMemo, useState } from "react";
+import { MoreHorizontal, Search, Shield, Trash2, UserCheck, UserX } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 export function UserManagementTable() {
   const [updateUserFn, { isLoading: updateUserLoading }] = useUpdateUserMutation();
-
-  const { data, isLoading, isError } = useGetAllUsersQuery({
-    role: USER_ROLES.USER,
-  });
 
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
 
   const itemsPerPage = 10;
 
-  const userList = useMemo(() => (data?.data as IUser[]) || [], [data?.data]);
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
-  const filteredUsers = useMemo(() => {
-    const searchString = (searchTerm || "").toLowerCase();
-    return userList.filter(
-      (user: IUser) =>
-        user.firstName.toLowerCase().includes(searchString) ||
-        user.lastName.toLowerCase().includes(searchString) ||
-        user.email.toLowerCase().includes(searchString) ||
-        user.role.toLowerCase().includes(searchString) ||
-        user._id.toLowerCase().includes(searchString)
-    );
-  }, [userList, searchTerm]);
+  // server-side params
+  const params = {
+    role: USER_ROLES.USER,
+    page: String(currentPage),
+    limit: String(itemsPerPage),
+    ...(debouncedSearchTerm && { searchTerm: debouncedSearchTerm }),
+  };
 
-  const paginatedUsers = useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    return filteredUsers.slice(startIndex, startIndex + itemsPerPage);
-  }, [filteredUsers, currentPage]);
+  const { data: usersResponse, isLoading, isError } = useGetAllUsersQuery(params);
 
-  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+  const users = (usersResponse?.data as IUser[]) || [];
+  const meta = usersResponse?.meta;
+  const totalPages = meta?.totalPages || 1;
 
   const handleStatusChange = async (userId: string, newStatus: IsActive) => {
     const updateData = {
@@ -207,7 +207,7 @@ export function UserManagementTable() {
     <Card className="p-5">
       <CardHeader className="border-b border-border/40">
         <CardTitle className="flex flex-col items-start md:flex-row md:items-center md:justify-between">
-          <span>Users ({filteredUsers.length})</span>
+          <span>Users ({users.length})</span>
           <div className="relative md:w-80 mt-4">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
@@ -234,16 +234,14 @@ export function UserManagementTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {paginatedUsers.length === 0 ? (
+            {users.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={7} className="h-40 text-center">
                   <div className="flex flex-col items-center justify-center">
                     <div className="text-muted-foreground mb-2">
-                      {filteredUsers.length === 0 && userList.length > 0
-                        ? "No users found matching your search."
-                        : "No users found."}
+                      {searchTerm && users.length === 0 ? "No users found matching your search." : "No users found."}
                     </div>
-                    {filteredUsers.length === 0 && userList.length > 0 && (
+                    {searchTerm && users.length === 0 && (
                       <Button
                         variant="outline"
                         size="sm"
@@ -259,10 +257,10 @@ export function UserManagementTable() {
                 </TableCell>
               </TableRow>
             ) : (
-              paginatedUsers.map((user: IUser, index: number) => (
+              users.map((user: IUser, index: number) => (
                 <TableRow
                   key={user._id}
-                  className={index === paginatedUsers.length - 1 ? "border-0" : "border-b border-border/20"}
+                  className={index === users.length - 1 ? "border-0" : "border-b border-border/20"}
                 >
                   <TableCell className="font-medium">
                     {user.firstName} {user.lastName}
@@ -375,51 +373,52 @@ export function UserManagementTable() {
           </TableBody>
         </Table>
 
-        {/* Pagination  */}
-        {
-          <div className="flex items-center justify-between px-6 py-4 border-t border-border/40">
-            <div className="text-sm text-muted-foreground">
-              Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
-              {Math.min(currentPage * itemsPerPage, filteredUsers.length)} of {filteredUsers.length} results
-            </div>
-            <div className="flex items-center space-x-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1}
-              >
-                <ChevronLeft className="h-4 w-4" />
-                Previous
-              </Button>
-              <div className="flex items-center space-x-1">
-                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                  const pageNum = i + 1;
-                  return (
-                    <Button
-                      key={pageNum}
-                      variant={currentPage === pageNum ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setCurrentPage(pageNum)}
-                      className="w-8 h-8 p-0"
-                    >
-                      {pageNum}
-                    </Button>
-                  );
-                })}
+        {/* Pagination */}
+        {meta && (
+          <div className="mt-4 px-6 py-4 border-t border-border/40">
+            <div className="flex items-center justify-between">
+              <div className="text-sm text-muted-foreground">
+                {meta.total > 0
+                  ? `Showing ${(meta.page - 1) * meta.limit + 1}-${Math.min(meta.page * meta.limit, meta.total)} of ${
+                      meta.total
+                    } users`
+                  : "No users found"}
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                disabled={currentPage === totalPages}
-              >
-                Next
-                <ChevronRight className="h-4 w-4" />
-              </Button>
+
+              {totalPages > 1 && (
+                <Pagination>
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious
+                        onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                        className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                      />
+                    </PaginationItem>
+
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                      <PaginationItem key={page}>
+                        <PaginationLink
+                          onClick={() => setCurrentPage(page)}
+                          isActive={currentPage === page}
+                          className="cursor-pointer"
+                        >
+                          {page}
+                        </PaginationLink>
+                      </PaginationItem>
+                    ))}
+
+                    <PaginationItem>
+                      <PaginationNext
+                        onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                        className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+              )}
             </div>
           </div>
-        }
+        )}
       </CardContent>
     </Card>
   );
