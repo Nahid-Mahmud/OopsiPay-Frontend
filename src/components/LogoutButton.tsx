@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import { Button } from "./ui/button";
 import { useAppDispatch } from "@/redux/hooks";
 import { baseApi } from "@/redux/baseApi";
+import { toast } from "sonner";
 
 export default function LogoutButton() {
   const navigate = useNavigate();
@@ -11,10 +12,19 @@ export default function LogoutButton() {
   const handleLogout = async () => {
     // remove user session form cookie
     document.cookie = "user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+    try {
+      await logout({}).unwrap();
+      dispatch(baseApi.util.resetApiState());
+      navigate("/login");
+      toast.success("Logout successful!");
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error("Logout failed:", error);
+      toast.error("Logout failed. Please try again.");
+    }
+
     // console.log("User logged out");
-    await logout({}).unwrap();
-    dispatch(baseApi.util.resetApiState());
-    navigate("/login");
   };
 
   return (
