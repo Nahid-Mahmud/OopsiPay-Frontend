@@ -1,4 +1,5 @@
 import { baseApi } from "@/redux/baseApi";
+import { tagTypes } from "@/redux/tagTypes";
 import type { IContactUs } from "@/types/contact-us.types";
 import type { TResponse } from "@/types/response.types";
 import type { IUser } from "@/types/user.types";
@@ -26,6 +27,7 @@ export const authApi = baseApi.injectEndpoints({
         method: "POST",
         data: data,
       }),
+      invalidatesTags: tagTypes,
     }),
 
     sendOtp: builder.mutation<TResponse<null>, TOtp>({
@@ -73,6 +75,7 @@ export const authApi = baseApi.injectEndpoints({
         url: "/auth/logout",
         method: "POST",
       }),
+      // invalidatesTags: tagTypes,
     }),
 
     contactUs: builder.mutation<TResponse<null>, IContactUs>({
