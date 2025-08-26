@@ -19,7 +19,7 @@ const CreditCard = ({
   expiryDate = "12/27",
   className,
 }: CreditCardProps) => {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
   const [isCopied, setIsCopied] = useState(false);
 
