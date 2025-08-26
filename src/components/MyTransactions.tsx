@@ -18,11 +18,13 @@ import { toast } from "sonner";
 
 import type { ITransaction } from "@/types/transaction.types";
 import { useGetMyTransactionsQuery } from "@/redux/features/transaction/transaction.api";
+import { useGetMyWalletQuery } from "@/redux/features/wallet/wallet.api";
 
 export default function MyTransactions() {
   const { data, isLoading, error } = useGetMyTransactionsQuery(null);
-  console.log(data);
+
   const [copiedItems, setCopiedItems] = useState<Set<string>>(new Set());
+  const { data: myWallet, isLoading: isLoadingWallet } = useGetMyWalletQuery();
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -59,6 +61,7 @@ export default function MyTransactions() {
         });
       }, 2000);
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error("Failed to copy: ", err);
       toast.error("Could not copy to clipboard");
     }
@@ -95,7 +98,7 @@ export default function MyTransactions() {
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
-      currency: "USD",
+      currency: "BDT",
     }).format(amount);
   };
 
@@ -137,7 +140,7 @@ export default function MyTransactions() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {isLoading ? (
+              {isLoading || isLoadingWallet ? (
                 // Loading skeleton rows
                 Array.from({ length: 5 }).map((_, index) => (
                   <TableRow key={index}>
@@ -185,7 +188,11 @@ export default function MyTransactions() {
                         <CopyButton text={transaction.transactionId} label="Transaction ID" />
                       </div>
                     </TableCell>
-                    <TableCell className="font-medium">{transaction.toWallet.walletNumber}</TableCell>
+                    <TableCell className="font-medium">
+                      {myWallet?.data?.walletNumber === transaction.toWallet.walletNumber
+                        ? "Self"
+                        : transaction.toWallet.walletNumber}
+                    </TableCell>
                     <TableCell>{getTypeBadge(transaction.transactionType)}</TableCell>
                     <TableCell>{getStatusBadge(transaction.status)}</TableCell>
                     <TableCell className="font-medium">{formatCurrency(transaction.transactionAmount)}</TableCell>
