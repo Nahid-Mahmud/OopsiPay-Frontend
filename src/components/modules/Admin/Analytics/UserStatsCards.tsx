@@ -23,7 +23,6 @@ interface UserStatsCardsProps {
 }
 
 export default function UserStatsCards({ userStats, isLoading }: UserStatsCardsProps) {
-  console.log(userStats);
   return (
     <div className="space-y-4">
       <h2 className="text-xl font-semibold">User Statistics</h2>
