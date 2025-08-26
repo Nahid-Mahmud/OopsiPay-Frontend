@@ -19,7 +19,7 @@ const CreditCard = ({
   expiryDate = "12/27",
   className,
 }: CreditCardProps) => {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
   const [isCopied, setIsCopied] = useState(false);
 
@@ -124,8 +124,8 @@ const CreditCard = ({
         </div>
 
         {/* Middle section with card number */}
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
+        <div className="space-y-3">
+          <div className="flex justify-between items-center mt-2">
             <Wifi className="h-6 w-6 text-black/80" />
             <div className="text-right">
               <p className="text-xs text-muted-foreground">CONTACTLESS</p>
