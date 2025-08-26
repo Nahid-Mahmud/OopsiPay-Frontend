@@ -4,7 +4,6 @@ import Footer from "./Footer";
 
 export default function CommonLayout() {
   const { pathname } = useLocation();
-  console.log(pathname);
 
   return (
     <div>
