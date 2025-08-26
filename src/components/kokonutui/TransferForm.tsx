@@ -194,8 +194,6 @@ export default function TransferForm({
     try {
       // Call the API
       const res = await createTransaction(values).unwrap();
-      console.log(res);
-      console.log("Transaction successful:", res);
 
       // Store the transaction ID from the response
       if (res?.data?.transactionId) {
@@ -206,7 +204,6 @@ export default function TransferForm({
       }
     } catch (error: any) {
       const errorMsg = error?.data?.message || error?.message || "Transaction failed. Please try again.";
-      console.log("Transaction failed:", errorMsg);
 
       // Show error toast
       toast.error(errorMsg);
