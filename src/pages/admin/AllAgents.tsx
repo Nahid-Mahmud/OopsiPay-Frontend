@@ -19,8 +19,6 @@ export function AgentManagementTable() {
     role: USER_ROLES.AGENT,
   });
 
-  console.log(data);
-
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -48,8 +46,6 @@ export function AgentManagementTable() {
   const totalPages = Math.ceil(filteredAgents.length / itemsPerPage);
 
   const handleStatusChange = async (agentId: string, newStatus: IsActive) => {
-    console.log(`Updating agent ${agentId} status to ${newStatus}`);
-
     const updateData = {
       isActive: newStatus,
     };
@@ -61,14 +57,13 @@ export function AgentManagementTable() {
         toast.success("Agent status updated successfully.");
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error("Error updating agent:", error);
       toast.error("Failed to update agent status.");
     }
   };
 
   const handleDeleteAgent = async (agentId: string, isDeleted: boolean) => {
-    console.log(`Updating agent ${agentId} delete status to ${!isDeleted}`);
-
     const updateData = {
       isDeleted: !isDeleted,
     };
@@ -79,6 +74,7 @@ export function AgentManagementTable() {
         toast.success(`Agent ${!isDeleted ? "deleted" : "recovered"} successfully.`);
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error("Error updating agent delete status:", error);
       toast.error(`Failed to ${!isDeleted ? "delete" : "recover"} agent.`);
     }
