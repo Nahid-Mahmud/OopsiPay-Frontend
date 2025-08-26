@@ -72,7 +72,6 @@ export default function VerifyEmailPage() {
       toast.error(error?.data?.message || "Verification failed");
     }
   };
-  console.log(location.state?.email);
 
   const handleResendOtp = async () => {
     const toastId = toast.loading("Resending OTP...");
