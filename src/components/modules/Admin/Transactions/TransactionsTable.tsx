@@ -1,8 +1,6 @@
-import { useState } from "react";
-import { Eye } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Pagination,
   PaginationContent,
@@ -11,11 +9,13 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Eye } from "lucide-react";
+import { useState } from "react";
 
-import type { ITransaction } from "@/types/transaction.types";
 import { useGetAllTransactionsQuery } from "@/redux/features/transaction/transaction.api";
+import type { ITransaction } from "@/types/transaction.types";
 import { TransactionDetailsModal } from "./TransactionDetailsModal";
 
 export function TransactionsTable() {
