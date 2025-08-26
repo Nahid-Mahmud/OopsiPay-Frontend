@@ -45,7 +45,7 @@ export default function MyWallet() {
   const getTransferFormTitle = (type: PaymentType) => {
     switch (type) {
       case "CASH_IN":
-        return "Add Money";
+        return "Cash In";
       case "CASH_OUT":
         return "Withdraw Money";
       case "SEND_MONEY":
@@ -60,7 +60,7 @@ export default function MyWallet() {
   const getTransferFormDescription = (type: PaymentType) => {
     switch (type) {
       case "CASH_IN":
-        return "Add funds to your wallet securely.";
+        return "Add funds to User wallet securely.";
       case "CASH_OUT":
         return "Withdraw money from your wallet to your bank account.";
       case "SEND_MONEY":
