@@ -27,7 +27,7 @@ import LogoutButton from "./LogoutButton";
 import { Skeleton } from "./ui/skeleton";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { startTour } = useDriver();
+  const { startTour, isTourActive } = useDriver();
   const location = useLocation();
   const { data: userData, isLoading: userDataLoading } = useUserInfoQuery();
 
@@ -84,7 +84,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       const hadSeenTour = localStorage.getItem("admin-sidebar-tour");
       const isDesktop = window.innerWidth >= 768;
 
-      if (!hadSeenTour && isDesktop) {
+      if (!hadSeenTour && isDesktop && !isTourActive()) {
         localStorage.setItem("admin-sidebar-tour", "true");
         startTour(sidebarTourSteps);
         localStorage.setItem("admin-sidebar-tour", "true");
@@ -92,7 +92,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, [sidebarTourSteps, startTour]);
+  }, [sidebarTourSteps, startTour, isTourActive]);
 
   return (
     <Sidebar {...props}>

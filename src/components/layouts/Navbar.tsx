@@ -13,7 +13,7 @@ const navItems: { name: string; href: string }[] = [
 export default function Navbar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [scroll, setScroll] = useState(false);
-  const { startTour, destroyTour } = useDriver();
+  const { startTour, destroyTour, isTourActive } = useDriver();
 
   const navbarTourSteps = useMemo(
     () => [
@@ -82,14 +82,14 @@ export default function Navbar() {
       const hasSeenTour = localStorage.getItem("navbar-tour-seen");
       const isDesktop = window.innerWidth >= 768; // md breakpoint
 
-      if (!hasSeenTour && isDesktop) {
+      if (!hasSeenTour && isDesktop && !isTourActive()) {
         startTour(navbarTourSteps);
         localStorage.setItem("navbar-tour-seen", "true");
       }
     }, 1000); // 2 second delay to let page load
 
     return () => clearTimeout(timer);
-  }, [startTour, navbarTourSteps]);
+  }, [startTour, navbarTourSteps, isTourActive]);
 
   // Example: Destroy tour when sidebar opens
   useEffect(() => {

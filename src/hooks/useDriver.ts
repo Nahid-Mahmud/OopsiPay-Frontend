@@ -19,6 +19,11 @@ interface HighlightOptions {
 
 export const useDriver = () => {
   const startTour = useCallback((steps: DriverStep[]) => {
+    // Check if a tour is already active
+    if (driverInstance.isActive()) {
+      return;
+    }
+
     driverInstance.setSteps(steps);
     driverInstance.drive();
   }, []);
@@ -34,10 +39,15 @@ export const useDriver = () => {
     driverInstance.destroy();
   }, []);
 
+  const isTourActive = useCallback(() => {
+    return driverInstance.isActive();
+  }, []);
+
   return {
     driver: driverInstance,
     startTour,
     highlightElement,
     destroyTour,
+    isTourActive,
   };
 };

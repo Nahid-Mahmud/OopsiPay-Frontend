@@ -10,7 +10,7 @@ import { useEffect, useMemo } from "react";
 
 export default function Analytics() {
   const { data: userStatsResponse, isLoading: userDataLoading, error: userDataError } = useUserStatsQuery();
-  const { startTour } = useDriver();
+  const { startTour, isTourActive } = useDriver();
   const {
     data: transactionStatsResponse,
     isLoading: transactionDataLoading,
@@ -152,13 +152,23 @@ export default function Analytics() {
       const isDesktop = window.innerWidth >= 768; // md breakpoint
 
       if (!hasSeenTour && isDesktop) {
-        startTour(analyticsTourSteps);
-        localStorage.setItem("analytics-tour-seen", "true");
+        // Check every 500ms if tour is available to start
+        const checkAndStartTour = () => {
+          if (!isTourActive()) {
+            startTour(analyticsTourSteps);
+            localStorage.setItem("analytics-tour-seen", "true");
+          } else {
+            // Keep checking until tour is available
+            setTimeout(checkAndStartTour, 500);
+          }
+        };
+
+        checkAndStartTour();
       }
-    }, 1000); // 2 second delay to let page load
+    }, 1000); // Initial delay to let page load
 
     return () => clearTimeout(timer);
-  }, [startTour, analyticsTourSteps]);
+  }, [startTour, analyticsTourSteps, isTourActive]);
 
   const hasError = Boolean(userDataError || transactionDataError);
 
