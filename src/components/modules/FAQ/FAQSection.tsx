@@ -148,18 +148,18 @@ export default function FAQSection() {
             <Card key={item.id} className="overflow-hidden">
               <button
                 onClick={() => toggleItem(item.id)}
-                className="w-full p-6 text-left hover:bg-gray-50 transition-colors duration-200"
+                className="w-full p-6 text-left hover:bg-gray-50 dark:hover:bg-black/50 transition-colors duration-200"
               >
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="text-xs font-medium text-blue-600 mb-1">{item.category}</div>
-                    <h3 className="text-lg font-semibold text-gray-900 pr-4">{item.question}</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white/90 pr-4">{item.question}</h3>
                   </div>
                   <div className="flex-shrink-0">
                     {openItems.includes(item.id) ? (
-                      <ChevronUp className="h-5 w-5 text-gray-500" />
+                      <ChevronUp className="h-5 w-5 text-gray-500 dark:text-white/50" />
                     ) : (
-                      <ChevronDown className="h-5 w-5 text-gray-500" />
+                      <ChevronDown className="h-5 w-5 text-gray-500 dark:text-white/50" />
                     )}
                   </div>
                 </div>
@@ -168,7 +168,7 @@ export default function FAQSection() {
               {openItems.includes(item.id) && (
                 <div className="px-6 pb-6">
                   <div className="border-t pt-4">
-                    <p className="text-gray-600 leading-relaxed">{item.answer}</p>
+                    <p className="text-gray-600 dark:text-white/70 leading-relaxed">{item.answer}</p>
                   </div>
                 </div>
               )}
