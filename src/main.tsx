@@ -6,12 +6,15 @@ import "./index.css";
 import { router } from "./routes/index.tsx";
 import { Provider } from "react-redux";
 import store from "./redux/store.ts";
+import { ThemeProvider } from "./components/theme-provider.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <Provider store={store}>
-      <RouterProvider router={router} />
-      <Toaster richColors duration={3000} closeButton position="top-right" />
-    </Provider>
+    <ThemeProvider defaultTheme="system" storageKey="theme">
+      <Provider store={store}>
+        <RouterProvider router={router} />
+        <Toaster richColors duration={3000} closeButton position="top-right" />
+      </Provider>
+    </ThemeProvider>
   </StrictMode>
 );
