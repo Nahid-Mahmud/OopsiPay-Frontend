@@ -36,21 +36,17 @@ export default function Navbar() {
     <div>
       <header
         className={`fixed inset-x-0 top-0 z-50 p-6 transition-all duration-300 ${
-          scroll ? "bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100" : "bg-transparent"
+          scroll ? "bg-background backdrop-blur-md shadow-sm border-b border-gray-100" : "bg-transparent"
         }`}
       >
         <nav className="flex items-center justify-between max-w-7xl mx-auto">
-          <div className="font-space-grotesk font-bold text-2xl text-black">
+          <div className="font-space-grotesk font-bold text-2xl ">
             <Link to="/">OopsiPAY</Link>
           </div>
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-8">
             {navItems.map((item) => (
-              <Link
-                key={item.name}
-                to={item.href}
-                className="text-black/80 hover:text-black transition-colors text-lg hover:font-bold"
-              >
+              <Link key={item.name} to={item.href} className=" transition-colors text-lg hover:font-bold">
                 {item.name}
               </Link>
             ))}
