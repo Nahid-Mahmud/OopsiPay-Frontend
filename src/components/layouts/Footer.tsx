@@ -7,23 +7,32 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand Section */}
           <div className="space-y-4">
-            <h3 className="text-2xl font-bold text-gray-900">OopsiPay</h3>
-            <p className="text-gray-600 leading-relaxed max-w-sm">
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">OopsiPay</h3>
+            <p className="text-gray-600 dark:text-white/80 leading-relaxed max-w-sm">
               Your one-stop payment solution. Your trusted partner in seamless transactions.
             </p>
           </div>
 
           {/* Links Section */}
           <div className="space-y-4">
-            <h4 className="text-lg font-semibold text-gray-900">Company</h4>
+            <h4 className="text-lg font-semibold text-gray-900 dark:text-white">Company</h4>
             <div className="flex flex-col space-y-3">
-              <Link to="/about" className="text-gray-600 hover:text-gray-900 transition-colors duration-200">
+              <Link
+                to="/about"
+                className="text-gray-600 dark:text-white/80 hover:text-gray-900 dark:hover:text-white/90 transition-colors duration-200"
+              >
                 About Us
               </Link>
-              <Link to="#" className="text-gray-600 hover:text-gray-900 transition-colors duration-200">
+              <Link
+                to="#"
+                className="text-gray-600 dark:text-white/80 hover:text-gray-900 dark:hover:text-white/90 transition-colors duration-200"
+              >
                 Terms of Service
               </Link>
-              <Link to="#" className="text-gray-600 hover:text-gray-900 transition-colors duration-200">
+              <Link
+                to="#"
+                className="text-gray-600 dark:text-white/80 hover:text-gray-900 dark:hover:text-white/90 transition-colors duration-200"
+              >
                 Privacy Policy
               </Link>
             </div>
@@ -31,12 +40,18 @@ export default function Footer() {
 
           {/* Contact/Support Section */}
           <div className="space-y-4">
-            <h4 className="text-lg font-semibold text-gray-900">Support</h4>
+            <h4 className="text-lg font-semibold text-gray-900 dark:text-white">Support</h4>
             <div className="flex flex-col space-y-3">
-              <Link to="#" className="text-gray-600 hover:text-gray-900 transition-colors duration-200">
+              <Link
+                to="#"
+                className="text-gray-600 dark:text-white/80 hover:text-gray-900 dark:hover:text-white/90 transition-colors duration-200"
+              >
                 Help Center
               </Link>
-              <Link to="#" className="text-gray-600 hover:text-gray-900 transition-colors duration-200">
+              <Link
+                to="#"
+                className="text-gray-600 dark:text-white/80 hover:text-gray-900 dark:hover:text-white/90 transition-colors duration-200"
+              >
                 Contact Us
               </Link>
             </div>
@@ -46,7 +61,7 @@ export default function Footer() {
         {/* Bottom Section */}
         <div className="mt-12 pt-8 border-t border-gray-200">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-sm text-gray-500">© 2024 OopsiPay. All rights reserved.</p>
+            <p className="text-sm text-gray-500 dark:text-white/50">© 2024 OopsiPay. All rights reserved.</p>
             <div className="flex space-x-6">
               <Link to="#" className="text-gray-400 hover:text-gray-600 transition-colors duration-200">
                 <span className="sr-only">Twitter</span>

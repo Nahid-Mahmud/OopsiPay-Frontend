@@ -2,6 +2,7 @@ import { useUserInfoQuery } from "@/redux/features/user/user.api";
 import { useEffect, useState, memo } from "react";
 import { Link } from "react-router";
 import { Button } from "./ui/button";
+import { ModeToggle } from "./mode-toggle";
 
 function NavConditionalButton() {
   const [isUserLoggedIn, setIsUserLoggedIn] = useState<boolean | null>(null);
@@ -31,21 +32,31 @@ function NavConditionalButton() {
   if (isUserLoggedIn && userInfo?.data && userInfo.data.role) {
     // User is logged in - show user info or dashboard link
     return (
-      <Link to={navigationRoute} className="cursor-pointer">
-        <Button variant="secondary" className="font-dm-sans font-medium cursor-pointer">
-          Dashboard
-        </Button>
-      </Link>
+      <div className="flex items-center justify-center gap-4">
+        <Link to={navigationRoute} className="cursor-pointer">
+          <Button variant="secondary" className="font-dm-sans font-medium cursor-pointer">
+            Dashboard
+          </Button>
+        </Link>
+        <div>
+          <ModeToggle />
+        </div>
+      </div>
     );
   }
 
   // User is not logged in - show login button
   return (
-    <Link to="/login" className="cursor-pointer">
-      <Button variant="secondary" className="font-dm-sans font-medium cursor-pointer">
-        Get Started
-      </Button>
-    </Link>
+    <div className="flex items-center justify-center gap-4">
+      <Link to="/login" className="cursor-pointer">
+        <Button id="navbar-get-started-btn" variant="secondary" className="font-dm-sans font-medium cursor-pointer">
+          Get Started
+        </Button>
+      </Link>
+      <div id="navbar-mode-toggle">
+        <ModeToggle />
+      </div>
+    </div>
   );
 }
 

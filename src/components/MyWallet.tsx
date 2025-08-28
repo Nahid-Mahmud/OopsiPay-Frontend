@@ -30,18 +30,6 @@ export default function MyWallet() {
     setIsTransferFormOpen(true);
   };
 
-  // const handleTransfer = async (data: TransferFormData) => {
-  //   console.log("Transfer data:", data);
-
-  //   // Simulate API call
-  //   await new Promise((resolve) => setTimeout(resolve, 2000));
-
-  //   // Here you would typically call your transfer API
-  //   // Example:
-  //   // const response = await transferAPI.createTransaction(data);
-  //   // if (!response.success) throw new Error(response.message);
-  // };
-
   const getTransferFormTitle = (type: PaymentType) => {
     switch (type) {
       case "CASH_IN":

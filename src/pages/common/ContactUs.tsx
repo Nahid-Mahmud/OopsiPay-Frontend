@@ -74,12 +74,12 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-background">
       <div className="container mx-auto px-4 py-16">
         {/* Header Section */}
         <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Contact Us</h1>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Contact Us</h1>
+          <p className="text-gray-600 dark:text-white/80 max-w-2xl mx-auto">
             Ready to start your next project? Our team is here to help you succeed. Reach out and let's discuss how we
             can bring your ideas to life.
           </p>
@@ -93,16 +93,18 @@ export default function ContactPage() {
             {cards.map((method) => {
               const Icon = method.Icon as React.ComponentType<React.SVGProps<SVGSVGElement>>;
               return (
-                <Card key={method.id} className="bg-gray-100 border-0">
+                <Card key={method.id} className="bg-gray-100 dark:bg-gray-900 border-0">
                   <CardContent className="p-4">
                     <div className="flex items-start space-x-4">
-                      <div className="bg-white p-3 rounded-lg">
-                        <Icon className="h-6 w-6 text-gray-700" />
+                      <div className="bg-white dark:bg-background p-3 rounded-lg">
+                        <Icon className="h-6 w-6 text-gray-700 dark:text-white/80" />
                       </div>
                       <div>
-                        <h3 className="font-semibold text-gray-900 mb-1">{method.title}</h3>
-                        {method.subtitle && <p className="text-sm text-gray-600 mb-2">{method.subtitle}</p>}
-                        <p className="text-gray-900 font-medium">{method.detail}</p>
+                        <h3 className="font-semibold text-gray-900 dark:text-white mb-1">{method.title}</h3>
+                        {method.subtitle && (
+                          <p className="text-sm text-gray-600 dark:text-white/70 mb-2">{method.subtitle}</p>
+                        )}
+                        <p className="text-gray-900 dark:text-white/80 font-medium">{method.detail}</p>
                       </div>
                     </div>
                   </CardContent>
@@ -113,8 +115,10 @@ export default function ContactPage() {
 
           {/* Right Side - Contact Form */}
           <div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">Send us a message</h2>
-            <p className="text-gray-600 mb-6">Fill out the form below and we'll get back to you within 24 hours.</p>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white/80 mb-2">Send us a message</h2>
+            <p className="text-gray-600 dark:text-white/80 mb-6">
+              Fill out the form below and we'll get back to you within 24 hours.
+            </p>
 
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -197,38 +201,38 @@ export default function ContactPage() {
             <div className="grid md:grid-cols-2 gap-12 pt-8 border-t border-gray-200 text-sm mt-10">
               {/* Office Hours */}
               <div>
-                <h3 className="font-semibold text-gray-900 mb-4">Office Hours</h3>
+                <h3 className="font-semibold text-gray-900 dark:text-white not-last-of-type:mb-4">Office Hours</h3>
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Monday - Friday</span>
-                    <span className="text-gray-900">9:00 AM - 6:00 PM EST</span>
+                    <span className="text-gray-600 dark:text-white/80">Monday - Friday</span>
+                    <span className="text-gray-900 dark:text-white/80">9:00 AM - 6:00 PM EST</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Saturday</span>
-                    <span className="text-gray-900">10:00 AM - 4:00 PM EST</span>
+                    <span className="text-gray-600 dark:text-white/80">Saturday</span>
+                    <span className="text-gray-900 dark:text-white/80">10:00 AM - 4:00 PM EST</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Sunday</span>
-                    <span className="text-gray-900">Closed</span>
+                    <span className="text-gray-600 dark:text-white/80">Sunday</span>
+                    <span className="text-gray-900 dark:text-white/80">Closed</span>
                   </div>
                 </div>
               </div>
 
               {/* Contact Information */}
               <div className="text-sm">
-                <h3 className=" font-semibold text-gray-900 mb-4">Contact Information</h3>
+                <h3 className=" font-semibold text-gray-900 dark:text-white mb-4">Contact Information</h3>
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Email</span>
-                    <span className="text-gray-900">hello@OopsiPAY.com</span>
+                    <span className="text-gray-600 dark:text-white/80">Email</span>
+                    <span className="text-gray-900 dark:text-white/80">hello@OopsiPAY.com</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Phone</span>
-                    <span className="text-gray-900">+1 (555) 123-4567</span>
+                    <span className="text-gray-600 dark:text-white/80">Phone</span>
+                    <span className="text-gray-900 dark:text-white/80">+1 (555) 123-4567</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Address</span>
-                    <span className="text-gray-900">123 Innovation St, Tech City</span>
+                    <span className="text-gray-600 dark:text-white/80">Address</span>
+                    <span className="text-gray-900 dark:text-white/80">123 Innovation St, Tech City</span>
                   </div>
                 </div>
               </div>

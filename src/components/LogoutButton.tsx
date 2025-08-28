@@ -28,7 +28,7 @@ export default function LogoutButton() {
   };
 
   return (
-    <Button onClick={handleLogout} variant={"destructive"} className="cursor-pointer">
+    <Button id="logout-button" onClick={handleLogout} variant={"destructive"} className="cursor-pointer">
       Logout
     </Button>
   );
