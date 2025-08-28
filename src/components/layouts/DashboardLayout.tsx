@@ -10,6 +10,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Link, Outlet, useLocation } from "react-router";
+import { ModeToggle } from "../mode-toggle";
 
 export default function DashboardLayout() {
   // get routes like /admin/analytics
@@ -67,6 +68,7 @@ export default function DashboardLayout() {
               </PopoverContent>
             </Popover>
           </div> */}
+          <ModeToggle />
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4">
           <Outlet />
