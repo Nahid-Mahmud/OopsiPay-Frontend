@@ -10,7 +10,7 @@ export default function AboutHeroSection() {
         <div className="text-center">
           <div className="flex items-center justify-center ">
             <div className="p-3 bg-accent/10 rounded-2xl mr-4">
-              <Wallet className="h-12 w-12 text-black" />
+              <Wallet className="h-12 w-12 text-black dark:text-white" />
             </div>
             <h1 className="text-5xl lg:text-7xl font-bold ">
               <MatrixText text="OopsiPAY" className="min-h-0 mb-0 p-0" />
