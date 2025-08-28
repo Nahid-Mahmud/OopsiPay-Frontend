@@ -15,16 +15,19 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { USER_ROLES } from "@/constants/user.constants";
+import { useDriver } from "@/hooks/useDriver";
 import { useUserInfoQuery } from "@/redux/features/user/user.api";
 import { AdminSidebarItems } from "@/routes/AdminSidebarItems";
 import { AgentSidebarItems } from "@/routes/AgentSidebarItems";
 import { UserSidebarItems } from "@/routes/UserSidebarItems";
 import type { ISidebarItem } from "@/types";
+import { useMemo, useEffect } from "react";
 import { NavLink, useLocation } from "react-router";
 import LogoutButton from "./LogoutButton";
 import { Skeleton } from "./ui/skeleton";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { startTour } = useDriver();
   const location = useLocation();
   const { data: userData, isLoading: userDataLoading } = useUserInfoQuery();
 
@@ -56,6 +59,41 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const currentSidebarItems = sideBarItems();
   const activeSectionIndex = getSectionIndex(location.pathname, currentSidebarItems);
 
+  const sidebarTourSteps = useMemo(
+    () => [
+      {
+        element: "#user-sidebar-menu",
+        popover: {
+          title: "User Menu",
+          description: "Access your account settings, profile, and more.",
+        },
+      },
+      {
+        element: "#logout-button",
+        popover: {
+          title: "Logout",
+          description: "Click here to log out of your account.",
+        },
+      },
+    ],
+    []
+  );
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const hadSeenTour = localStorage.getItem("admin-sidebar-tour");
+      const isDesktop = window.innerWidth >= 768;
+
+      if (!hadSeenTour && isDesktop) {
+        localStorage.setItem("admin-sidebar-tour", "true");
+        startTour(sidebarTourSteps);
+        localStorage.setItem("admin-sidebar-tour", "true");
+      }
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [sidebarTourSteps, startTour]);
+
   return (
     <Sidebar {...props}>
       <SidebarContent className="flex flex-col h-full">
@@ -70,7 +108,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             )}
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu id="user-sidebar-menu">
               {userDataLoading
                 ? // Loading skeleton
                   Array.from({ length: 3 }).map((_, index) => (
