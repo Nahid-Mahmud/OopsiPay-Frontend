@@ -31,7 +31,7 @@ export default function UserStatsCards({ userStats, isLoading }: UserStatsCardsP
           Array.from({ length: 4 }).map((_, index) => <StatCardSkeleton key={index} />)
         ) : userStats ? (
           <>
-            <Card className="hover:shadow-lg transition-all duration-200 group">
+            <Card className="hover:shadow-lg dark:hover:shadow-white/30 transition-all duration-200 group">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium group-hover:text-primary">Total Users</CardTitle>
                 <Users className="h-4 w-4 text-muted-foreground group-hover:text-primary" />
@@ -42,7 +42,7 @@ export default function UserStatsCards({ userStats, isLoading }: UserStatsCardsP
               </CardContent>
             </Card>
 
-            <Card className="hover:shadow-lg transition-all duration-200 group">
+            <Card className="hover:shadow-lg transition-all dark:hover:shadow-white/30 duration-200 group">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium group-hover:text-primary">Active Users</CardTitle>
                 <UserCheck className="h-4 w-4 text-muted-foreground group-hover:text-primary" />
@@ -56,7 +56,7 @@ export default function UserStatsCards({ userStats, isLoading }: UserStatsCardsP
               </CardContent>
             </Card>
 
-            <Card className="hover:shadow-lg transition-all duration-200 group">
+            <Card className="hover:shadow-lg transition-all dark:hover:shadow-white/30 duration-200 group">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium group-hover:text-destructive">Inactive Users</CardTitle>
                 <UserX className="h-4 w-4 text-muted-foreground group-hover:text-destructive" />
@@ -72,7 +72,7 @@ export default function UserStatsCards({ userStats, isLoading }: UserStatsCardsP
               </CardContent>
             </Card>
 
-            <Card className="hover:shadow-lg transition-all duration-200 group">
+            <Card className="hover:shadow-lg transition-all dark:hover:shadow-white/30 duration-200 group">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium group-hover:text-primary">New Users (30d)</CardTitle>
                 <TrendingUp className="h-4 w-4 text-muted-foreground group-hover:text-primary" />
