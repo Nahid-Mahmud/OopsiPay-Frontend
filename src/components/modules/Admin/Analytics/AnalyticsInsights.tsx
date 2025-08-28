@@ -44,7 +44,7 @@ export default function AnalyticsInsights({
         Array.from({ length: 3 }).map((_, index) => <InsightCardSkeleton key={index} />)
       ) : (
         <>
-          <Card>
+          <Card className="dark:hover:shadow-white/30">
             <CardHeader>
               <CardTitle className="text-lg">User Growth</CardTitle>
             </CardHeader>
@@ -68,7 +68,7 @@ export default function AnalyticsInsights({
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="dark:hover:shadow-white/30">
             <CardHeader>
               <CardTitle className="text-lg">Transaction Health</CardTitle>
             </CardHeader>
@@ -103,7 +103,7 @@ export default function AnalyticsInsights({
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="dark:hover:shadow-white/30">
             <CardHeader>
               <CardTitle className="text-lg">System Status</CardTitle>
             </CardHeader>
