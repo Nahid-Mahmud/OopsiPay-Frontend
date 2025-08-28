@@ -1,7 +1,3 @@
-Here's a refined version of the `README.md` for the OopsiPay frontend application. The changes focus on improving clarity, consistency, and organization while maintaining the original structure and content. I've streamlined sections, improved formatting, fixed minor inconsistencies (e.g., numbering in "Key implementation notes"), and enhanced readability with concise language and better headings. I've also ensured the document is professional and developer-friendly.
-
----
-
 # OopsiPay Frontend
 
 A comprehensive guide for developers working on the OopsiPay frontend, built with **React**, **TypeScript**, and **Vite**. This document covers setup, architecture, development workflows, testing, linting, deployment, troubleshooting, and contribution guidelines.
