@@ -38,7 +38,9 @@ function NavConditionalButton() {
             Dashboard
           </Button>
         </Link>
-        <ModeToggle />
+        <div>
+          <ModeToggle />
+        </div>
       </div>
     );
   }
@@ -47,11 +49,13 @@ function NavConditionalButton() {
   return (
     <div className="flex items-center justify-center gap-4">
       <Link to="/login" className="cursor-pointer">
-        <Button variant="secondary" className="font-dm-sans font-medium cursor-pointer">
+        <Button id="navbar-get-started-btn" variant="secondary" className="font-dm-sans font-medium cursor-pointer">
           Get Started
         </Button>
       </Link>
-      <ModeToggle />
+      <div id="navbar-mode-toggle">
+        <ModeToggle />
+      </div>
     </div>
   );
 }
