@@ -1,12 +1,13 @@
+import "driver.js/dist/driver.css";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { Provider } from "react-redux";
 import { RouterProvider } from "react-router";
 import { Toaster } from "sonner";
-import "./index.css";
-import { router } from "./routes/index.tsx";
-import { Provider } from "react-redux";
-import store from "./redux/store.ts";
 import { ThemeProvider } from "./components/theme-provider.tsx";
+import "./index.css";
+import store from "./redux/store.ts";
+import { router } from "./routes/index.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
