@@ -94,6 +94,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           {/* <Button onClick={handleLogout} variant={"destructive"} className="cursor-pointer">
             Logout
           </Button> */}
+
           <LogoutButton />
         </SidebarGroup>
       </SidebarContent>
