@@ -174,3 +174,63 @@
   background-size: 200% 200%;
   animation: gradient-shift 8s ease infinite;
 }
+
+/* Custom Driver.js theme colors */
+.driver-popover {
+  background: var(--background) !important;
+  color: var(--popover-foreground) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+.driver-popover-title {
+  color: var(--popover-foreground) !important;
+  font-weight: 600 !important;
+}
+
+.driver-popover-description {
+  color: var(--muted-foreground) !important;
+}
+
+.driver-popover-next-btn,
+.driver-popover-prev-btn,
+.driver-popover-close-btn {
+  background: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border: none !important;
+  border-radius: var(--radius) !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+}
+
+.driver-popover-next-btn:hover,
+.driver-popover-prev-btn:hover,
+.driver-popover-close-btn:hover {
+  background: var(--primary) !important;
+  opacity: 0.9 !important;
+  transform: translateY(-1px) !important;
+}
+
+.driver-popover-next-btn:active,
+.driver-popover-prev-btn:active,
+.driver-popover-close-btn:active {
+  transform: translateY(0) !important;
+}
+
+.driver-overlay {
+  background: rgba(0, 0, 0, 0.5) !important;
+}
+
+.driver-popover-arrow {
+  color: var(--popover) !important;
+  border-color: var(--border) !important;
+}
+
+/* Dark mode adjustments */
+.dark .driver-popover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark .driver-overlay {
+  background: rgba(0, 0, 0, 0.7) !important;
+}

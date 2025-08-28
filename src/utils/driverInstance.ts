@@ -11,4 +11,5 @@ export const driverInstance = driver({
   showButtons: ["next", "previous", "close"],
   disableActiveInteraction: false,
   allowKeyboardControl: true,
+  popoverClass: "custom-driver-popover",
 });
