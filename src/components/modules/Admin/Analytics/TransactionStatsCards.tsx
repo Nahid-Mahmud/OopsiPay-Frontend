@@ -24,14 +24,17 @@ interface TransactionStatsCardsProps {
 
 export default function TransactionStatsCards({ transactionStats, isLoading }: TransactionStatsCardsProps) {
   return (
-    <div className="space-y-4">
+    <div id="transaction-stats" className="space-y-4">
       <h2 className="text-xl font-semibold">Transaction Statistics</h2>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {isLoading ? (
           Array.from({ length: 4 }).map((_, index) => <StatCardSkeleton key={index} />)
         ) : transactionStats ? (
           <>
-            <Card className="hover:shadow-lg transition-all dark:hover:shadow-white/30 duration-200 group">
+            <Card
+              id="total-transactions"
+              className="hover:shadow-lg transition-all dark:hover:shadow-white/30 duration-200 group"
+            >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium group-hover:text-primary">Total Transactions</CardTitle>
                 <CreditCard className="h-4 w-4 text-muted-foreground group-hover:text-primary" />
@@ -44,7 +47,10 @@ export default function TransactionStatsCards({ transactionStats, isLoading }: T
               </CardContent>
             </Card>
 
-            <Card className="hover:shadow-lg transition-all dark:hover:shadow-white/30 duration-200 group">
+            <Card
+              id="successful-transactions"
+              className="hover:shadow-lg transition-all dark:hover:shadow-white/30 duration-200 group"
+            >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium group-hover:text-primary">Successful</CardTitle>
                 <Activity className="h-4 w-4 text-green-600 group-hover:text-primary" />
@@ -60,7 +66,10 @@ export default function TransactionStatsCards({ transactionStats, isLoading }: T
               </CardContent>
             </Card>
 
-            <Card className="hover:shadow-lg transition-all dark:hover:shadow-white/30 duration-200 group">
+            <Card
+              id="failed-transactions"
+              className="hover:shadow-lg transition-all dark:hover:shadow-white/30 duration-200 group"
+            >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium group-hover:text-destructive">Failed</CardTitle>
                 <Activity className="h-4 w-4 text-red-600 group-hover:text-destructive" />
@@ -76,7 +85,10 @@ export default function TransactionStatsCards({ transactionStats, isLoading }: T
               </CardContent>
             </Card>
 
-            <Card className="hover:shadow-lg transition-all dark:hover:shadow-white/30 duration-200 group">
+            <Card
+              id="pending-transactions"
+              className="hover:shadow-lg transition-all dark:hover:shadow-white/30 duration-200 group"
+            >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium group-hover:text-yellow-600">Pending</CardTitle>
                 <Clock className="h-4 w-4 text-yellow-600 group-hover:text-yellow-600" />

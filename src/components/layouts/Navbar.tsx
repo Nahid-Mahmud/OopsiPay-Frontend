@@ -78,15 +78,13 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
-    // Start tour automatically after component mounts and page loads
-    // Only show tour on desktop devices (screen width > 768px)
     const timer = setTimeout(() => {
       const hasSeenTour = localStorage.getItem("navbar-tour-seen");
-      const isDesktop = window.innerWidth > 768; // md breakpoint
+      const isDesktop = window.innerWidth >= 768; // md breakpoint
 
       if (!hasSeenTour && isDesktop) {
         startTour(navbarTourSteps);
-        // localStorage.setItem("navbar-tour-seen", "true");
+        localStorage.setItem("navbar-tour-seen", "true");
       }
     }, 1000); // 2 second delay to let page load
 

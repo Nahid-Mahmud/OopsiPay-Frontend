@@ -52,7 +52,7 @@ export default function AnalyticsCharts({
       {userDataLoading ? (
         <ChartSkeleton />
       ) : userStats && userRoleData.length > 0 ? (
-        <Card className="dark:hover:shadow-white/30">
+        <Card id="user-roles-chart" className="dark:hover:shadow-white/30">
           <CardHeader>
             <CardTitle>User Roles Distribution</CardTitle>
             <CardDescription>Breakdown of users by their assigned roles</CardDescription>
@@ -82,7 +82,7 @@ export default function AnalyticsCharts({
           </CardContent>
         </Card>
       ) : (
-        <Card>
+        <Card id="user-roles-chart">
           <CardHeader>
             <CardTitle>User Roles Distribution</CardTitle>
             <CardDescription>Breakdown of users by their assigned roles</CardDescription>
@@ -99,7 +99,7 @@ export default function AnalyticsCharts({
       {transactionDataLoading ? (
         <ChartSkeleton />
       ) : transactionStats && transactionTypeData.length > 0 ? (
-        <Card className="dark:hover:shadow-white/30">
+        <Card id="transaction-types-chart" className="dark:hover:shadow-white/30">
           <CardHeader>
             <CardTitle>Transaction Types</CardTitle>
             <CardDescription>Distribution of transactions by type</CardDescription>
@@ -119,7 +119,7 @@ export default function AnalyticsCharts({
           </CardContent>
         </Card>
       ) : (
-        <Card>
+        <Card id="transaction-types-chart">
           <CardHeader>
             <CardTitle>Transaction Types</CardTitle>
             <CardDescription>Distribution of transactions by type</CardDescription>
