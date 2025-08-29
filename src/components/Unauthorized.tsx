@@ -54,7 +54,7 @@ export default function UnauthorizedPage() {
                 <LogIn className="mr-2 size-4" /> Sign in
               </Link>
             </Button>
-            <Button asChild variant="ghost" className="rounded-2xl">
+            <Button asChild variant="outline" className="rounded-2xl">
               <Link to="/">Home</Link>
             </Button>
           </CardFooter>
