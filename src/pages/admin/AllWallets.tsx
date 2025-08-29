@@ -92,7 +92,7 @@ export default function AllWallets() {
         );
       case WALLET_STATUS.SUSPENDED:
         return (
-          <Badge variant="destructive" className="bg-red-100 text-red-800 hover:bg-red-100">
+          <Badge variant="destructive" className="bg-red-100 text-red-500 dark:text-white  hover:bg-red-100">
             <Ban className="w-3 h-3 mr-1" />
             Suspended
           </Badge>
