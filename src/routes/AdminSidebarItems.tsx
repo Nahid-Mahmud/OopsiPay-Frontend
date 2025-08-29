@@ -110,19 +110,19 @@ export const AdminSidebarItems: ISidebarItem[] = [
     items: [
       {
         title: "Profile",
-        url: "/admin/settings/profile",
+        url: "/admin/profile",
         Component: Profile,
         icon: <Settings />,
       },
       {
         title: "Password",
-        url: "/admin/settings/password",
+        url: "/admin/password",
         Component: ChangePassword,
         icon: <Lock />,
       },
       {
         title: "PIN",
-        url: "/admin/settings/pin",
+        url: "/admin/pin",
         Component: ChangePinPage,
         icon: <Lock />,
       },
