@@ -17,31 +17,39 @@ import { UserSidebarItems } from "./UserSidebarItems";
 import { AgentSidebarItems } from "./AgentSidebarItems";
 import withAuth from "@/hooks/withAuth";
 import UnauthorizedPage from "@/components/Unauthorized";
+import NotFound from "@/components/NotFound";
+import RouteErrorBoundary from "@/components/RouteErrorBoundary";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     Component: CommonLayout,
+    errorElement: <RouteErrorBoundary />,
     children: [
       {
         path: "/",
         Component: HomePage,
+        errorElement: <RouteErrorBoundary />,
       },
       {
         path: "/about",
         Component: About,
+        errorElement: <RouteErrorBoundary />,
       },
       {
         path: "/features",
         Component: Features,
+        errorElement: <RouteErrorBoundary />,
       },
       {
         path: "/faq",
         Component: FAQ,
+        errorElement: <RouteErrorBoundary />,
       },
       {
         path: "/contact",
         Component: ContactPage,
+        errorElement: <RouteErrorBoundary />,
       },
     ],
   },
@@ -49,27 +57,33 @@ export const router = createBrowserRouter([
   {
     path: "/login",
     Component: LoginPage,
+    errorElement: <RouteErrorBoundary />,
   },
   {
     path: "/register",
     Component: RegisterPage,
+    errorElement: <RouteErrorBoundary />,
   },
   {
     path: "/forget-password",
     Component: ForgetPasswordPage,
+    errorElement: <RouteErrorBoundary />,
   },
   {
     path: "/reset-password",
     Component: ResetPasswordPage,
+    errorElement: <RouteErrorBoundary />,
   },
   {
     path: "/verify-email",
     Component: VerifyEmailPage,
+    errorElement: <RouteErrorBoundary />,
   },
 
   {
     path: "/admin",
     Component: withAuth(DashboardLayout, ["ADMIN", "SUPER_ADMIN"]),
+    errorElement: <RouteErrorBoundary />,
     children: [
       {
         index: true,
@@ -81,6 +95,7 @@ export const router = createBrowserRouter([
   {
     path: "/user",
     Component: withAuth(DashboardLayout, ["USER"]),
+    errorElement: <RouteErrorBoundary />,
     children: [
       {
         index: true,
@@ -92,6 +107,7 @@ export const router = createBrowserRouter([
   {
     path: "/agent",
     Component: withAuth(DashboardLayout, ["AGENT"]),
+    errorElement: <RouteErrorBoundary />,
     children: [
       {
         index: true,
@@ -103,5 +119,11 @@ export const router = createBrowserRouter([
   {
     path: "/unauthorized",
     Component: UnauthorizedPage,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "*",
+    element: <NotFound />,
+    errorElement: <RouteErrorBoundary />,
   },
 ]);
