@@ -23,6 +23,19 @@ export default function LoginPage() {
     },
   });
 
+  const defaultCredentials = {
+    USER: { email: "kamla@oletters.com", password: "passwordA1@" },
+    AGENT: { email: "newagent@oletters.com", password: "Pa$$w0rd!" },
+    ADMIN: { email: "admin@gmaill.com", password: "Pa$$w0rd!34" },
+  };
+
+  const loginWithRole = (role: keyof typeof defaultCredentials) => {
+    const credentials = defaultCredentials[role];
+    form.setValue("email", credentials.email);
+    form.setValue("password", credentials.password);
+    form.handleSubmit(onSubmit)();
+  };
+
   const getRoute = (role: string) => {
     switch (role) {
       case USER_ROLES.ADMIN:
@@ -67,6 +80,8 @@ export default function LoginPage() {
 
   return (
     <section className="flex min-h-screen bg-zinc-50 px-4 py-16 md:py-32 dark:bg-transparent">
+      {/*  */}
+
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -123,10 +138,45 @@ export default function LoginPage() {
               <Button disabled={isLoading} type="submit" className="w-full cursor-pointer">
                 Sign In {isLoading && <Loader2 className="inline-block h-4 w-4 animate-spin" />}
               </Button>
+
+              <div className="mt-4 flex flex-col gap-2">
+                <p className="text-center mb-2 underline font-bold text-2xl">Login As</p>
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    onClick={() => loginWithRole("USER")}
+                    variant="outline"
+                    className="w-fit flex-1"
+                  >
+                    User
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={() => loginWithRole("AGENT")}
+                    variant="outline"
+                    className="w-fit flex-1"
+                  >
+                    Agent
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={() => loginWithRole("ADMIN")}
+                    variant="outline"
+                    className="w-fit flex-1"
+                  >
+                    Admin
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
 
           <div className="p-3">
+            <div className="flex justify-center mb-2">
+              <Button asChild variant="link" className="px-2">
+                <Link to="/">Back to Home</Link>
+              </Button>
+            </div>
             <p className="text-accent-foreground text-center text-sm">
               Don&apos;t have an account?
               <Button asChild variant="link" className="px-2">
