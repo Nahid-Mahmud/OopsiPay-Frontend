@@ -24,7 +24,7 @@ export default function LoginPage() {
   });
 
   const defaultCredentials = {
-    USER: { email: "kamla@oletters.com", password: "passwordA1@" },
+    USER: { email: "testuser99@oletters.com", password: "Pa$$w0rd!" },
     AGENT: { email: "newagent@oletters.com", password: "Pa$$w0rd!" },
     ADMIN: { email: "admin@gmaill.com", password: "Pa$$w0rd!34" },
   };
